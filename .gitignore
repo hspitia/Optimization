@@ -1,0 +1,19 @@
+# Ignore doc directory
+#doc/**/*
+# Ignore debug directory
+debug/*
+# Ignore release directory
+release/**/*
+# Ignore project executable
+app
+# IGnore object files
+*.o
+# Ignore backups files
+*.*~
+# Ignore moc files
+#moc_*.*
+
+# Ignore tmp directory
+#tmp/*
+# Ignore ui headers 
+ui_*
