@@ -1,0 +1,17 @@
+#! /bin/sh
+
+# Script para realizar copia comprimida del proyecto y guardarla en la ruta 
+# deseada. 
+# Recibe dos parametros: VERSION - version de la copia
+#                        BACKUP_PATH - Ruta de almacenamiento de la copia
+# Ejemplo:
+#           $ ./backup 01 /media/usb1 
+ 
+VERSION=$1
+BACKUP_PATH=$2
+
+make clean
+rm app
+tar -zcvf ../opt_$VERSION.tgz ../Optimization
+mv ../opt_$VERSION.tgz $BACKUP_PATH/
+sync
