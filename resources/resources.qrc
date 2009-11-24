@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/icons" >
+        <file alias="open_blue" >icons/open_blue.png</file>
+        <file alias="city_16" >icons/city_icon_16.png</file>
+        <file alias="school_16" >icons/school_icon_16.png</file>
+        <file alias="city_24" >icons/city_icon_24.png</file>
+        <file alias="school_24" >icons/school_icon_24.png</file>
+    </qresource>
+</RCC>

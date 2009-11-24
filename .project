@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Opimization</name>
+	<name>Optimization</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -64,7 +64,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.environment</key>
-					<value>LC_ALL=C|PATH=/opt/qtsdk-2009.03/qt/bin:${env_var:PATH}:${env_var:PATH}|</value>
+					<value>PATH=/opt/qtsdk-2009.03/qt/bin:${env_var:PATH}:${env_var:PATH}|LC_ALL=C|</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.stopOnError</key>
