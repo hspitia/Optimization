@@ -8,12 +8,14 @@
 #include <QtGui/QWidget>
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
+#include <QMessageBox>
 
 // Project
 #include "app/ApplicationController.h"
-#include "gui/ImageViewer.h" 
 #include "ui_MainWindow.h"
 
+// Std
+#include <cmath>
 
 // Cyclic reference 
 class ApplicationController;
@@ -44,6 +46,7 @@ class MainWindow : public QMainWindow
     void paintRegion(const int & regionSize);
     void paintTowns(const QList<int> & townsNumbers,
                     const QList<QPointF> & townsCoordinates);
+    void paintGraphLabels(const int & regionSize);
   
   private slots:
     void newProblemInput();

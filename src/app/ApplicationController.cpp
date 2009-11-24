@@ -14,7 +14,7 @@
  *       Author:  He-.ctor Fabio Espitia Navarro
  *  Institution:  UNIVERSIDAD DEL VALLE - ESCUELA DE INGENIERIA DE SISTEMAS Y 
  *                COMPUTACION 
- *      Project:  GenomAMf
+ *      Project:  Optimization
  *      License:  GNU GPL. See more details in LICENSE file
  *  Description:  
  */

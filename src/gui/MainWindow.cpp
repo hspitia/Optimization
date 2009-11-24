@@ -7,7 +7,7 @@ MainWindow::MainWindow(ApplicationController * parentApplication,
 {
   this->parentApplication = parentApplication;
   this->gridSize =  24; // pixels
-  this->margin   =  20; // pixels
+  this->margin   =  30; // pixels
   this->imgSize  = 380; // pixels
 	ui->setupUi(this);
 	connectSignalsSlots();
@@ -70,6 +70,7 @@ void MainWindow::setUpScene(const int & regionSize,
 {
   paintRegion(regionSize);
   paintTowns(townsNumbers, townsCoordinates);
+  paintGraphLabels(regionSize);
 }
 
 void MainWindow::paintRegion(const int & regionSize)
@@ -78,6 +79,7 @@ void MainWindow::paintRegion(const int & regionSize)
   
   int nLines = regionSize + 1;
   int areaSize = imgSize - (margin * 2);
+  gridSize = 24;
   int newGridSize = static_cast<int> (areaSize / regionSize);
   
   if (newGridSize < 20) {
@@ -115,17 +117,16 @@ void MainWindow::paintRegion(const int & regionSize)
 
     painter->drawLine(x1, y1, x2, y2);
   }
-  
   ui->imageLabel->setPixmap(QPixmap::fromImage(*image));
+  delete painter;
+  delete image;
 }
 
 void MainWindow::paintTowns(const QList<int> & townsNumbers,
-                              const QList<QPointF> & townsCoordinates)
+                            const QList<QPointF> & townsCoordinates)
 {
-//  QImage * image = new QImage();
-  
-  QPainter * painter = 
-          new QPainter(const_cast<QPixmap *>(ui->imageLabel->pixmap()));
+  QPixmap * pixmap  = new QPixmap(*(ui->imageLabel->pixmap()));
+  QPainter * painter = new QPainter(pixmap);
   QPen pen(QColor(20, 20, 20));
   painter->setPen(pen);
 //  painter->setBrush(Qt::darkBlue);
@@ -138,7 +139,9 @@ void MainWindow::paintTowns(const QList<int> & townsNumbers,
   double xCoordinate = 0.0;
   QPixmap town(":/icons/city_24");
   int halfIconSize = town.width() / 2;
-  painter->setFont(QFont(QString("Arial"), 9, QFont::Normal));
+  pen = QPen(QColor(Qt::blue));
+  painter->setPen(pen);
+  painter->setFont(QFont(QString("Arial"), 9, QFont::Bold));
   painter->setLayoutDirection(Qt::LeftToRight);
   
   for (int i = 0; i < townsCoordinates.count(); ++i) {
@@ -153,8 +156,49 @@ void MainWindow::paintTowns(const QList<int> & townsNumbers,
     currentPoint = QPointF(xCoordinate, yCoordinate);
     painter->drawText(currentPoint, QString().setNum(townsNumbers.at(i)));
   }
+  
+  ui->imageLabel->setPixmap(*pixmap);
+  delete painter;
 }
 
+void MainWindow::paintGraphLabels(const int & regionSize)
+{
+  QPixmap * pixmap  = new QPixmap(*(ui->imageLabel->pixmap()));
+  QPainter * painter = new QPainter(pixmap);
+  QPen pen(QColor(20, 20, 20));
+  painter->setPen(pen);
+  
+  double xCoordinate = margin / 2;
+//  double xCoordinate = 0.0;
+  double yCoordinate = imgSize - (margin / 2);
+//  double yCoordinate = (margin / 1.2);
+  
+//  painter->translate(xCoordinate, yCoordinate);
+  painter->setFont(QFont(QString("Arial"), 8, QFont::Normal));
+  painter->setLayoutDirection(Qt::LeftToRight);
+  int nLines = regionSize + 1;
+  
+  painter->drawText(QPointF(xCoordinate, yCoordinate), "0");
+  
+  double displacement = 0.0;
+  
+  for (int i = 1; i < nLines; ++i) {
+    if (i >= 10) 
+       displacement = 3.0;
+    xCoordinate = (gridSize * i) + (margin / 1.1) - displacement;
+    yCoordinate = imgSize - (margin / 2);
+    painter->drawText(QPointF(xCoordinate, yCoordinate), QString().setNum(i));
+    xCoordinate = (margin / 2) - displacement;
+    yCoordinate = imgSize - ((gridSize * i) + (margin * 0.9));
+    painter->drawText(QPointF(xCoordinate, yCoordinate), QString().setNum(i));
+//    painter->drawRect(QRectF(xCoordinate, yCoordinate, xCoordinate + 2, yCoordinate + 2));
+  }
+  
+  
+  ui->imageLabel->setPixmap(*pixmap);
+  delete painter;
+  delete pixmap;
+}
 
 
 
