@@ -20,3 +20,6 @@ debugapp.exe
 #tmp/*
 # Ignore ui headers 
 ui_*
+
+# Ignore Makefile files
+Makefile*
