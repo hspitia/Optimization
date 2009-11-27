@@ -85,8 +85,8 @@
 #endif
 
 /* Byte-sized Booleans and extended options */
-#define FALSE                    0
-#define TRUE                     1
+//#define FALSE                    0
+//#define TRUE                     1
 #define AUTOMATIC                2
 #define DYNAMIC                  4
 
