@@ -64,7 +64,7 @@ void lpsolveDemo()
 
   delete_lp(lp);
   
-  cout << "\NTerminado exitosamente!! "<< endl;
+  cout << "\nTerminado exitosamente!! "<< endl;
 }
 
 int defaultApp(int argc, char *argv[])

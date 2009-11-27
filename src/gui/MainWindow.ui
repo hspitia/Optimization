@@ -41,7 +41,7 @@
            <x>0</x>
            <y>0</y>
            <width>385</width>
-           <height>383</height>
+           <height>375</height>
           </rect>
          </property>
          <layout class="QGridLayout" name="gridLayout">
@@ -104,6 +104,12 @@
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>toolBar</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>

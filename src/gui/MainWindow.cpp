@@ -137,7 +137,9 @@ void MainWindow::paintTowns(const QList<int> & townsNumbers,
           
   double yCoordinate = 0.0;
   double xCoordinate = 0.0;
-  QPixmap town(":/icons/city_24");
+//  QPixmap town(":/icons/city_24");
+//  QPixmap town(":/icons/city_32");
+  QPixmap town(":/icons/school_24");
   int halfIconSize = town.width() / 2;
   pen = QPen(QColor(Qt::blue));
   painter->setPen(pen);
