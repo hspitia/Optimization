@@ -4,8 +4,11 @@
 debug/*
 # Ignore release directory
 release/**/*
-# Ignore project executable
+# Ignore project executables
+# Linux executable
 app
+# Win32 executable
+debugapp.exe
 # IGnore object files
 *.o
 # Ignore backups files

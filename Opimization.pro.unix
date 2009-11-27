@@ -15,24 +15,13 @@ FORMS += src/gui/MainWindow.ui
 DEPENDPATH += . \
     src/ \
     src/app \
-    src/gui 
+    src/gui
 INCLUDEPATH += . \
     src/ \
     src/app \
-    src/gui 
-unix {
-  LIBS += -L/usr/lib/lpsolve \
-      -llpsolve55 \
-      -L/usr/lib \
-      -lcolamd
-}
-win32 {
-  DEPENDPATH += include \
-     include/lpsolve
-  INCLUDEPATH += include/ \
-     include/lpsolve
-  LIBS += -L"lib" \
-      -llpsolve55
-  CONFIG += console
-} 
+    src/gui
+LIBS += -L/usr/lib/lpsolve \
+    -llpsolve55 \
+    -L/usr/lib \
+    -lcolamd
 RESOURCES += resources/resources.qrc
