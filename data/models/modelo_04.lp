@@ -31,10 +31,18 @@ min: D1 + D2;
 
 
 
+
+// De condición
+200 r1 >= D1;
+200 r2 >= D2;
+
+// Binarias
 N1 <= 1;
 N2 <= 1;
 r1 <= 1;
 r2 <= 1;
+
+r1 + r2 = 1;
 
 int r1, r2;
 int N1, N2;
