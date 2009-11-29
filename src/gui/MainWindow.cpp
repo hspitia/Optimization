@@ -76,7 +76,7 @@ void MainWindow::setUpScene(const int & regionSize,
 void MainWindow::paintRegion(const int & regionSize)
 {
 //  ui->imageLabel->resize(imgSize, imgSize);
-  
+  imgSize = 380;
   int nLines = regionSize + 1;
   int areaSize = imgSize - (margin * 2);
   gridSize = 24;
