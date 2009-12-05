@@ -29,8 +29,8 @@
 
 // Project
 #include <gui/MainWindow.h>
-#include <app/FileParser.h>
-#include <app/ParametersSet.h>
+#include <parser/FileParser.h>
+#include <parser/ParametersSet.h>
 
 
 // Cyclic reference 

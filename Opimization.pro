@@ -2,24 +2,26 @@ TEMPLATE = app
 TARGET = app
 QT += core \
     gui
-HEADERS += src/app/ParametersSet.h \
+HEADERS += src/bab/BranchAndBound.h \
+    src/utils/Utils.h \
+    src/utils/Problem.h \
+    src/utils/tree.h \
+    src/parser/ParametersSet.h \
     src/app/ApplicationController.h \
-    src/app/FileParser.h \
+    src/parser/FileParser.h \
     src/gui/MainWindow.h
-SOURCES += src/app/ParametersSet.cpp \
+SOURCES += src/bab/BranchAndBound.cpp \
+    src/utils/Problem.cpp \
+    src/parser/ParametersSet.cpp \
     src/app/ApplicationController.cpp \
-    src/app/FileParser.cpp \
+    src/parser/FileParser.cpp \
     src/gui/MainWindow.cpp \
     src/app/main.cpp
 FORMS += src/gui/MainWindow.ui
 DEPENDPATH += . \
-    src/ \
-    src/app \
-    src/gui 
+    src/
 INCLUDEPATH += . \
-    src/ \
-    src/app \
-    src/gui 
+    src/
 unix {
   LIBS += -L/usr/lib/lpsolve \
       -llpsolve55 \

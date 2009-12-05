@@ -21,6 +21,7 @@
 
 #include "ApplicationController.h"
 
+
 ApplicationController::ApplicationController(int & argc, char ** argv):
   QApplication(argc, argv), 
   mainWindow(new MainWindow(this))
