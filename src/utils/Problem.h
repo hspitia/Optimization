@@ -28,6 +28,16 @@
 // Lp solve
 #include <lpsolve/lp_lib.h>
 
+// Std
+#include <cassert>
+#include <iostream>
+
+using namespace std;
+
+// Project
+#include <utils/Utils.h>
+
+
 /**
  * 
  */
@@ -48,9 +58,13 @@ class Problem
     // Methods
     bool getVariables(double * variables);
     bool addConstraint(double * row, int constrType, double rhValue);
+    bool addConstraintex(int count, double * row, int * colno,
+                         int constrType, double rhValue);
     bool addColumn(double * column);
     double getObjFunctionValue() const;
     int compareObjFunctionValueTo(const double & value) const;
+    double getVariable(const int & columnIndex);
+    bool isIntegerVariable(const int & columnIndex);
     
     // Access
     lprec * getModel() const;

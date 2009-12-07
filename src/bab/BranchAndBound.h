@@ -30,6 +30,11 @@
 #include <utils/Problem.h>
 #include <utils/Utils.h>
 
+// Std
+#include <cmath>
+
+using namespace std;
+
 
 /**
  * 
@@ -47,34 +52,30 @@ class BranchAndBound
     virtual ~BranchAndBound();
     
     Problem * getBestSolution();
-    
     void setBestSolution(Problem * bestSolution);
-    
     QStack<Problem *> getProblemsToSolve();
-    
     void setProblemsToSolve(QStack<Problem *> problemsToSolve);
-    
     Problem * getOriginProblem();
-    
     void setOriginProblem(Problem * originProblem);
-    
     Problem * solveBb();
-    
     double getBound();
-    
     void setBound(double bound);
+    QList<int> getIndexesVarsBranching();
+    void setIndexesVarsBranching(QList<int> indexesVarsBranching);
     
   private:
-//    tree<Problem> problemsTree;
     Problem * originProblem;
     Problem * bestSolution;
     QStack<Problem *> problemsToSolve;
     double bound;
+    QList<int> indexesVarsBranching;
     
     bool isOverBound(const Problem & problem);
     bool isBelowBound(const Problem & problem);
     bool isIntegerSolution(const Problem & problem);
     QList<Problem *> branch(const Problem & problem);
+    void addConstraintToProblem(Problem * problem, const int & columnIndex, 
+                                const double & bound, const int & constrType)
 };
 
 #endif /* BRANCHANDBOUND_H_ */

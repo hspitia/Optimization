@@ -66,9 +66,20 @@ bool Problem::getVariables(double * variables)
 
 bool Problem::addConstraint(double * row, int constrType, double rhValue)
 {
-//  add_constraint(lprec *lp, REAL *row, int constr_type, REAL rh);
+//  add_constraint  (lprec *lp, REAL *row, int constr_type, REAL rh);
   set_add_rowmode(model, true);
   bool result = add_constraint(model, row, constrType, rhValue);
+  set_add_rowmode(model, false);
+  
+  return result;
+}
+
+bool Problem::addConstraintex(int count, double * row, int * colno, 
+                              int constrType, double rhValue)
+{
+//  add_constraintex(lprec *lp, int count, REAL *row, int *colno, int constr_type, REAL rh);
+  set_add_rowmode(model, true);
+  bool result = add_constraintex(model, count, row, colno, constrType, rhValue);
   set_add_rowmode(model, false);
   
   return result;
@@ -82,7 +93,7 @@ bool Problem::addColumn(double * column)
 
 double Problem::getObjFunctionValue() const
 {
-  int size = get_Nrows(model) + 1;
+  int size = get_Ncolumns(model);
   double solution[size];
   
   get_primal_solution(model, solution);
@@ -101,6 +112,32 @@ int Problem::compareObjFunctionValueTo(const double & value) const
     return -1;
   
   return 0;
+}
+
+double getVariable(const int & columnIndex)
+{
+  int size = get_Ncolumns(model);
+  double variables[size];
+  
+  if (columnIndex < 0 || columnIndex >= size) {
+    cout << "ERROR!! Assert. Out of bounds"
+         << " on line " << __LINE__  << "\n"
+         << " in file " << __FILE__  << "\n";
+    assert(false);
+  }
+  
+  get_variables(model, variables);
+  double variable = variables[columnIndex];
+  
+  return variable;
+}
+
+bool Problem::isIntegerVariable(const int & columnIndex)
+{
+  double variable = getVariable(columnIndex);
+  bool isInteger = utils::decimalPart(variable) == 0;
+  
+  return isInteger;
 }
 
 lprec * Problem::getModel() const

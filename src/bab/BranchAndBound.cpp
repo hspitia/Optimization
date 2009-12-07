@@ -52,19 +52,19 @@ Problem * BranchAndBound::solveBb()
 {
   problemsToSolve.push(originProblem);
   
-  while (!problemsToSolve.isEmpty()){
+  while (!problemsToSolve.isEmpty()) {
     Problem * currentProblem = problemsToSolve.pop();
     lprec * model = currentProblem->getModel();
     int result = solve(model);
-
-    bool feasible  = result == 0 || result == 1;
+    
+    bool feasible = result == 0 || result == 1;
     bool overBound = isOverBound(*currentProblem);
     bool integerSolution = isIntegerSolution(*currentProblem);
     
-    if (!feasible || overBound ||  integerSolution){
+    if (!feasible || overBound || integerSolution) {
       currentProblem->setFinished(true);
       if (integerSolution) {
-        if (isBelowBound((*currentProblem))){
+        if (isBelowBound((*currentProblem))) {
           bound = currentProblem->getObjFunctionValue();
           bestSolution = currentProblem;
         }
@@ -73,7 +73,7 @@ Problem * BranchAndBound::solveBb()
     else {
       QList<Problem *> children = branch(*currentProblem);
       foreach (Problem * p, children)
-        problemsToSolve.push(p);
+          problemsToSolve.push(p);
     }
   }
   return bestSolution;
@@ -83,9 +83,42 @@ QList<Problem *> BranchAndBound::branch(const Problem & problem)
 {
   QList<Problem *> children;
   
-  // TODO - Insertar algoritmo de ramificación
+  int i = 0;
+  bool branched = false;
+  
+  while (i < indexesVarsBranching.count() && !branched){
+    if (!problem.isIntegerVariable(i)) {
+      double upperBound = ceil(problem.getVariable(i));
+      double lowerBound = floor(problem.getVariable(i));
+      
+      Problem * newProblem = new Problem(problem);
+      addConstraintToProblem(newProblem, i, lowerBound, LE);
+      children.append(newProblem);
+      
+      newProblem = new Problem(problem);
+      addConstraintToProblem(newProblem, i, upperBound, GE);
+      children.append(newProblem);
+      branched = true;
+      newProblem = 0;
+    }
+    ++i;
+  }
   
   return children;
+}
+
+void addConstraintToProblem(Problem * problem, const int & columnIndex, 
+                            const double & bound, const int & constrType)
+{
+  double row[size];
+  
+  int colno[1];
+  colno[0] = columnIndex;
+  
+  double sparserow[1];
+  sparserow[0] = 1.0;
+  
+  problem->addConstraintex(1, sparserow, colno, constrType, bound);
 }
 
 bool BranchAndBound::isOverBound(const Problem & problem)
@@ -107,6 +140,8 @@ bool BranchAndBound::isIntegerSolution(const Problem & problem)
   
   // TODO - Insertar algoritmo para determinar si la 
   // solución es entera
+  
+  
   
 //  model = 0;
   return result;
@@ -142,7 +177,6 @@ void BranchAndBound::setOriginProblem(Problem * originProblem)
   this->originProblem = originProblem;
 }
 
-
 double BranchAndBound::getBound()
 {
   return bound;
@@ -153,3 +187,12 @@ void BranchAndBound::setBound(double bound)
   this->bound = bound;
 }
 
+QList<int> BranchAndBound::getIndexesVarsBranching()
+{
+  return indexesVarsBranching;
+}
+
+void BranchAndBound::setIndexesVarsBranching(QList<int> indexesVarsBranching)
+{
+  this->indexesVarsBranching = indexesVarsBranching;
+}
