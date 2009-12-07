@@ -23,7 +23,7 @@
 
 ParametersSet::ParametersSet()
 {
-  this->regionSize         = 0;
+  this->regionSize       = 0;
   this->nTowns           = 0;
   this->townsNumbers     = QList<int>();
   this->townsCoordinates = QList<QPointF>();
@@ -31,7 +31,7 @@ ParametersSet::ParametersSet()
 
 ParametersSet::ParametersSet(const ParametersSet & parametersSetObject)
 {
-  this->regionSize         = parametersSetObject.regionSize;
+  this->regionSize       = parametersSetObject.regionSize;
   this->nTowns           = parametersSetObject.nTowns;
   this->townsNumbers     = parametersSetObject.townsNumbers;
   this->townsCoordinates = parametersSetObject.townsCoordinates;
@@ -41,7 +41,7 @@ ParametersSet::ParametersSet(int regionSize, int nTowns,
                              QList<int> townsNumbers,
                              QList<QPointF> townsCoordinates)
 {
-  this->regionSize         = regionSize;
+  this->regionSize       = regionSize;
   this->nTowns           = nTowns;
   this->townsNumbers     = townsNumbers;
   this->townsCoordinates = townsCoordinates;
@@ -50,7 +50,7 @@ ParametersSet::ParametersSet(int regionSize, int nTowns,
 ParametersSet & ParametersSet::operator=(const ParametersSet & 
                                          parametersSetObject)
 {
-  this->regionSize         = parametersSetObject.regionSize;
+  this->regionSize       = parametersSetObject.regionSize;
   this->nTowns           = parametersSetObject.nTowns;
   this->townsNumbers     = parametersSetObject.townsNumbers;
   this->townsCoordinates = parametersSetObject.townsCoordinates;

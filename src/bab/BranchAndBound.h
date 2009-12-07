@@ -22,6 +22,10 @@
 #ifndef BRANCHANDBOUND_H_
 #define BRANCHANDBOUND_H_
 
+// Qt
+#include <QtCore/QStack>
+
+// Project
 #include <utils/tree.h>
 #include <utils/Problem.h>
 #include <utils/Utils.h>
@@ -35,14 +39,42 @@ class BranchAndBound
   public:
     enum BranchStrategy
     {
-      Normal_Strategy
+      DFS
     };
     
     BranchAndBound();
+    BranchAndBound(Problem * originProblem, double bound);
     virtual ~BranchAndBound();
     
+    Problem * getBestSolution();
+    
+    void setBestSolution(Problem * bestSolution);
+    
+    QStack<Problem *> getProblemsToSolve();
+    
+    void setProblemsToSolve(QStack<Problem *> problemsToSolve);
+    
+    Problem * getOriginProblem();
+    
+    void setOriginProblem(Problem * originProblem);
+    
+    Problem * solveBb();
+    
+    double getBound();
+    
+    void setBound(double bound);
+    
   private:
-    tree<Problem> problemsTree;
+//    tree<Problem> problemsTree;
+    Problem * originProblem;
+    Problem * bestSolution;
+    QStack<Problem *> problemsToSolve;
+    double bound;
+    
+    bool isOverBound(const Problem & problem);
+    bool isBelowBound(const Problem & problem);
+    bool isIntegerSolution(const Problem & problem);
+    QList<Problem *> branch(const Problem & problem);
 };
 
 #endif /* BRANCHANDBOUND_H_ */

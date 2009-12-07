@@ -49,10 +49,11 @@ class Problem
     bool getVariables(double * variables);
     bool addConstraint(double * row, int constrType, double rhValue);
     bool addColumn(double * column);
-    
+    double getObjFunctionValue() const;
+    int compareObjFunctionValueTo(const double & value) const;
     
     // Access
-    lprec * getModel();
+    lprec * getModel() const;
     void setModel(lprec * model);
     QString getId();
     void setId(QString id);

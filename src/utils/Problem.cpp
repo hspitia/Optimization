@@ -80,7 +80,30 @@ bool Problem::addColumn(double * column)
   return add_column(model, column);
 }
 
-lprec * Problem::getModel()
+double Problem::getObjFunctionValue() const
+{
+  int size = get_Nrows(model) + 1;
+  double solution[size];
+  
+  get_primal_solution(model, solution);
+  
+  double objFunctionValue = solution[0];
+  return objFunctionValue;
+}
+
+int Problem::compareObjFunctionValueTo(const double & value) const
+{
+  double objFunctionValue = getObjFunctionValue();
+  
+  if (objFunctionValue > value)
+    return 1;
+  if (objFunctionValue < value)
+    return -1;
+  
+  return 0;
+}
+
+lprec * Problem::getModel() const
 {
   return model;
 }
