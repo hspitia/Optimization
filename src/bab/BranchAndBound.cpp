@@ -50,6 +50,14 @@ BranchAndBound::~BranchAndBound()
 
 Problem * BranchAndBound::solveBb()
 {
+  if (originProblem->ProblemType == Problem::MAXIMIZATION)
+    solveBbMax();
+  else if (originProblem->ProblemType == Problem::MINIMIZATION)
+    solveBbMin();
+}
+
+Problem * BranchAndBound::solveBbMax()
+{
   problemsToSolve.push(originProblem);
   
   while (!problemsToSolve.isEmpty()) {
@@ -58,17 +66,47 @@ Problem * BranchAndBound::solveBb()
     int result = solve(model);
     
     bool feasible = result == 0 || result == 1;
-    bool overBound = isOverBound(*currentProblem);
-    bool integerSolution = isIntegerSolution(*currentProblem);
+    bool belowBound = currentProblem->isBelowBound(bound);
+    bool integerSolution = currentProblem->isIntegerSolution();
+    
+    if (!feasible || belowBound || integerSolution) {
+      currentProblem->setFinished(true);
+      
+      if (integerSolution && currentProblem->isOverBound(bound)) {
+          bound = currentProblem->getObjFunctionValue();
+          bestSolution = currentProblem;
+      }
+    }
+    else {
+      QList<Problem *> children = branch(*currentProblem);
+      foreach (Problem * p, children)
+          problemsToSolve.push(p);
+    }
+  }
+  return bestSolution;
+}
+
+Problem * BranchAndBound::solveBbMin()
+{
+  problemsToSolve.push(originProblem);
+  
+  while (!problemsToSolve.isEmpty()) {
+    Problem * currentProblem = problemsToSolve.pop();
+    lprec * model = currentProblem->getModel();
+    int result = solve(model);
+    
+    bool feasible = result == 0 || result == 1;
+    bool overBound = currentProblem->isOverBound(bound);
+    bool integerSolution = currentProblem->isIntegerSolution();
     
     if (!feasible || overBound || integerSolution) {
       currentProblem->setFinished(true);
-      if (integerSolution) {
-        if (isBelowBound((*currentProblem))) {
+      
+      if (integerSolution && currentProblem->isBelowBound(bound)) {
           bound = currentProblem->getObjFunctionValue();
           bestSolution = currentProblem;
-        }
       }
+      
     }
     else {
       QList<Problem *> children = branch(*currentProblem);
@@ -86,17 +124,17 @@ QList<Problem *> BranchAndBound::branch(const Problem & problem)
   int i = 0;
   bool branched = false;
   
-  while (i < indexesVarsBranching.count() && !branched){
+  while (i < indexesBranchingVars.count() && !branched){
     if (!problem.isIntegerVariable(i)) {
-      double upperBound = ceil(problem.getVariable(i));
       double lowerBound = floor(problem.getVariable(i));
+      double upperBound = ceil(problem.getVariable(i));
       
       Problem * newProblem = new Problem(problem);
-      addConstraintToProblem(newProblem, i, lowerBound, LE);
+      addConstraintToProblem(newProblem, i, LE, lowerBound);
       children.append(newProblem);
       
       newProblem = new Problem(problem);
-      addConstraintToProblem(newProblem, i, upperBound, GE);
+      addConstraintToProblem(newProblem, i, GE, upperBound);
       children.append(newProblem);
       branched = true;
       newProblem = 0;
@@ -107,11 +145,11 @@ QList<Problem *> BranchAndBound::branch(const Problem & problem)
   return children;
 }
 
-void addConstraintToProblem(Problem * problem, const int & columnIndex, 
-                            const double & bound, const int & constrType)
+void BranchAndBound::addConstraintToProblem(Problem * problem, 
+                                            const int & columnIndex,
+                                            const int & constrType,
+                                            const double & bound) 
 {
-  double row[size];
-  
   int colno[1];
   colno[0] = columnIndex;
   
@@ -133,19 +171,21 @@ bool BranchAndBound::isBelowBound(const Problem & problem)
   return result == -1;
 }
 
-bool BranchAndBound::isIntegerSolution(const Problem & problem)
-{
-  lprec * model = problem.getModel();
-  bool result = false;
-  
-  // TODO - Insertar algoritmo para determinar si la 
-  // solución es entera
-  
-  
-  
-//  model = 0;
-  return result;
-}
+//bool BranchAndBound::isIntegerSolution(const Problem & problem)
+//{
+//  int i = 0;
+//  bool isInteger = true; 
+//  
+//  while (i < indexesBranchingVars.count() && isInteger) {
+//    int variableIndex = indexesBranchingVars.at(i);
+//    integer = problem.isIntegerVariable(variableIndex);
+//  }
+//  
+//  if (isInteger)
+//    return true;
+//
+//  return false;
+//}
 
 Problem * BranchAndBound::getBestSolution()
 {
@@ -187,12 +227,12 @@ void BranchAndBound::setBound(double bound)
   this->bound = bound;
 }
 
-QList<int> BranchAndBound::getIndexesVarsBranching()
+QList<int> BranchAndBound::getIndexesBranchingVars()
 {
-  return indexesVarsBranching;
+  return indexesBranchingVars;
 }
 
-void BranchAndBound::setIndexesVarsBranching(QList<int> indexesVarsBranching)
+void BranchAndBound::setIndexesBranchingVars(QList<int> indexesBranchingVars)
 {
-  this->indexesVarsBranching = indexesVarsBranching;
+  this->indexesBranchingVars = indexesBranchingVars;
 }

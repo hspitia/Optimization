@@ -49,5 +49,9 @@ namespace utils
     return decimal;
   }
   
+  inline bool isInteger(double number){
+    return decimalPart(number) == 0;
+  }
+  
 }
 #endif /* UTILS_H_ */

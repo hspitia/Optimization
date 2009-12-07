@@ -91,20 +91,14 @@ bool Problem::addColumn(double * column)
   return add_column(model, column);
 }
 
-double Problem::getObjFunctionValue() const
+double Problem::getObjective() const
 {
-  int size = get_Ncolumns(model);
-  double solution[size];
-  
-  get_primal_solution(model, solution);
-  
-  double objFunctionValue = solution[0];
-  return objFunctionValue;
+  return get_objective(model);
 }
 
-int Problem::compareObjFunctionValueTo(const double & value) const
+int Problem::compareObjectiveTo(const double & value) const
 {
-  double objFunctionValue = getObjFunctionValue();
+  double objFunctionValue = getObjective();
   
   if (objFunctionValue > value)
     return 1;
@@ -114,7 +108,7 @@ int Problem::compareObjFunctionValueTo(const double & value) const
   return 0;
 }
 
-double getVariable(const int & columnIndex)
+double Problem::getVariable(const int & columnIndex) const
 {
   int size = get_Ncolumns(model);
   double variables[size];
@@ -132,12 +126,34 @@ double getVariable(const int & columnIndex)
   return variable;
 }
 
-bool Problem::isIntegerVariable(const int & columnIndex)
+bool Problem::isIntegerVariable(const int & columnIndex) const
 {
   double variable = getVariable(columnIndex);
-  bool isInteger = utils::decimalPart(variable) == 0;
+  return utils::isInteger(variable);
+}
+
+bool Problem::isIntegerSolution() const
+{
+  return utils::isInteger(getObjective());
+}
+
+bool Problem::isOverBound(const double & bound)
+{
+  return compareObjectiveTo(bound) == 1;
+}
+
+bool Problem::isBelowBound(const double & bound)
+{
+  return compareObjectiveTo(bound) == -1;
+}
+
+bool Problem::isToBound(const double & bound, ProblemType problemType)
+{
+  if (problemType == MAXIMIZATION) {
+    
+  }
   
-  return isInteger;
+  return false;
 }
 
 lprec * Problem::getModel() const
@@ -170,3 +186,12 @@ void Problem::setFinished(bool finished)
   this->finished = finished;
 }
 
+int Problem::getProblemType()
+{
+  return problemType;
+}
+
+void Problem::setProblemType(int problemType)
+{
+  this->problemType = problemType;
+}

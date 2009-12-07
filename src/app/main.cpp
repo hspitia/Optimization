@@ -34,9 +34,8 @@ using namespace std;;
 void lpsolveDemo()
 {
   lprec *lp;
-  
-
   lp = make_lp(0,4);
+  
   
   cout << "\nAdición restricción 1"<< endl;
   str_add_constraint(lp, "3 2 2 1", LE, 4);

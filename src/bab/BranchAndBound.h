@@ -58,24 +58,28 @@ class BranchAndBound
     Problem * getOriginProblem();
     void setOriginProblem(Problem * originProblem);
     Problem * solveBb();
+    Problem * solveBbMax();
+    Problem * solveBbMin();
     double getBound();
     void setBound(double bound);
-    QList<int> getIndexesVarsBranching();
-    void setIndexesVarsBranching(QList<int> indexesVarsBranching);
+    QList<int> getIndexesBranchingVars();
+    void setIndexesBranchingVars(QList<int> indexesBranchingVars);
     
   private:
     Problem * originProblem;
     Problem * bestSolution;
     QStack<Problem *> problemsToSolve;
     double bound;
-    QList<int> indexesVarsBranching;
+    QList<int> indexesBranchingVars;
     
     bool isOverBound(const Problem & problem);
     bool isBelowBound(const Problem & problem);
-    bool isIntegerSolution(const Problem & problem);
+//    bool isIntegerSolution(const Problem & problem);
     QList<Problem *> branch(const Problem & problem);
-    void addConstraintToProblem(Problem * problem, const int & columnIndex, 
-                                const double & bound, const int & constrType)
+    void addConstraintToProblem(Problem * problem, 
+                                const int & columnIndex,
+                                const int & constrType,
+                                const double & bound);
 };
 
 #endif /* BRANCHANDBOUND_H_ */
