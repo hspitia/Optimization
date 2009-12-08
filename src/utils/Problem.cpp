@@ -147,15 +147,6 @@ bool Problem::isBelowBound(const double & bound)
   return compareObjectiveTo(bound) == -1;
 }
 
-bool Problem::isToBound(const double & bound, ProblemType problemType)
-{
-  if (problemType == MAXIMIZATION) {
-    
-  }
-  
-  return false;
-}
-
 lprec * Problem::getModel() const
 {
   return model;
@@ -191,7 +182,7 @@ int Problem::getProblemType()
   return problemType;
 }
 
-void Problem::setProblemType(int problemType)
+void Problem::setProblemType(ProblemType problemType)
 {
   this->problemType = problemType;
 }

@@ -76,7 +76,6 @@ class Problem
     bool isIntegerSolution() const;
     bool isOverBound(const double & bound);
     bool isBelowBound(const double & bound);
-    bool isToBound(const double & bound, RelativeToBoundType relativeToBoundType);
     
     // Access
     lprec * getModel() const;
@@ -86,7 +85,7 @@ class Problem
     bool isFinished();
     void setFinished(bool finished);
     int getProblemType();
-    void setProblemType(int problemType);
+    void setProblemType(ProblemType problemType);
     
   private:
     // Members

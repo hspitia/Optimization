@@ -50,10 +50,10 @@ BranchAndBound::~BranchAndBound()
 
 Problem * BranchAndBound::solveBb()
 {
-  if (originProblem->ProblemType == Problem::MAXIMIZATION)
-    solveBbMax();
-  else if (originProblem->ProblemType == Problem::MINIMIZATION)
-    solveBbMin();
+  if (originProblem->getProblemType() == Problem::MINIMIZATION)
+    return solveBbMin();
+
+  return solveBbMax();
 }
 
 Problem * BranchAndBound::solveBbMax()
@@ -73,7 +73,7 @@ Problem * BranchAndBound::solveBbMax()
       currentProblem->setFinished(true);
       
       if (integerSolution && currentProblem->isOverBound(bound)) {
-          bound = currentProblem->getObjFunctionValue();
+          bound = currentProblem->getObjective();
           bestSolution = currentProblem;
       }
     }
@@ -103,14 +103,14 @@ Problem * BranchAndBound::solveBbMin()
       currentProblem->setFinished(true);
       
       if (integerSolution && currentProblem->isBelowBound(bound)) {
-          bound = currentProblem->getObjFunctionValue();
+          bound = currentProblem->getObjective();
           bestSolution = currentProblem;
       }
       
     }
     else {
       QList<Problem *> children = branch(*currentProblem);
-      foreach (Problem * p, children)
+      foreach(Problem * p, children)
           problemsToSolve.push(p);
     }
   }
@@ -161,13 +161,13 @@ void BranchAndBound::addConstraintToProblem(Problem * problem,
 
 bool BranchAndBound::isOverBound(const Problem & problem)
 {
-  int result = problem.compareObjFunctionValueTo(bound);
+  int result = problem.compareObjectiveTo(bound);
   return result == 1;
 }
 
 bool BranchAndBound::isBelowBound(const Problem & problem)
 {
-  int result = problem.compareObjFunctionValueTo(bound);
+  int result = problem.compareObjectiveTo(bound);
   return result == -1;
 }
 

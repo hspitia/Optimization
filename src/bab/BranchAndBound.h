@@ -24,6 +24,7 @@
 
 // Qt
 #include <QtCore/QStack>
+#include <QtCore/QList>
 
 // Project
 #include <utils/tree.h>
@@ -74,7 +75,6 @@ class BranchAndBound
     
     bool isOverBound(const Problem & problem);
     bool isBelowBound(const Problem & problem);
-//    bool isIntegerSolution(const Problem & problem);
     QList<Problem *> branch(const Problem & problem);
     void addConstraintToProblem(Problem * problem, 
                                 const int & columnIndex,
