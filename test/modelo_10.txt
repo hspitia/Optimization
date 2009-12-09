@@ -1,0 +1,65 @@
+FORMATO MATEMÁTICO
+--------------------------
+
+// Cálculo de las distancias
+
+Dxi >= ex - Xi - M(1-Nxi)
+Dxi <= ex - Xi + M(1-Nxi)
+Dxi >= Xi - ex - M*Nxi
+Dxi <= Xi - ex + M*Nxi
+
+Dyi >= ey - Yi - M(1-Nyi)
+Dyi <= ey - Yi + M(1-Nyi)
+Dyi >= Yi - ey - M*Nyi
+Dyi <= Yi - ey + M*Nyi 
+
+Di = Dxi + Dyi
+
+// Cálculo de los condicionales de la vereda más lejana
+
+Di - Dj + M(1-ri) >= 0, para todo "i" diferente de "j"
+
+sumatoria(ri) = 1
+
+// Cálculo de las distancias condicionadas
+
+Ai >= Di - M(1-ri)
+Ai <= Di + M(1-ri)
+Ai <= M*ri
+
+// Función objetivo
+
+z = sumatoria(Di) + sumatoria(Ai)
+
+FORMATO LP_SOLVE
+--------------------------
+
+// Cálculo de las distancias
+
+Dxi - ex + Xi - M Nxi >= -M;
+Dxi - ex + Xi + M Nxi <= M;
+Dxi - Xi + ex + M Nxi >= 0;
+Dxi - Xi + ex - M Nxi <= 0;
+
+Dyi - ex + Xi - M Nyi >= -M;
+Dyi - ex + Xi + M Nyi <= M;
+Dyi - Xi + ex + M Nyi >= 0;
+Dyi - Xi + ex - M Nyi <= 0;
+
+Dxi + Dyi = Di;
+
+// Cálculo de los condicionales de la vereda más lejana
+
+Di - Dj - M ri >= -M;
+
+sumatoria(ri) = 1;
+
+// Cálculo de las distancias condicionadas
+
+Ai - Di - M ri >= -M;
+Ai - Di + M ri <= M;
+Ai - M ri <= 0;
+
+// Función objetivo
+
+z = sumatoria(Di) + sumatoria(Ai);

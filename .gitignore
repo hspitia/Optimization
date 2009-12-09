@@ -23,3 +23,5 @@ ui_*
 
 # Ignore Makefile files
 Makefile*
+
+.class
