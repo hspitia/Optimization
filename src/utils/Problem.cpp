@@ -155,7 +155,7 @@ bool Problem::isMaximization()
 
 QString Problem::getColumnName(const int & columnIndex)
 {
-  
+  return QString();
 }
 
 lprec * Problem::getModel() const

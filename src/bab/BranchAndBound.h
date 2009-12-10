@@ -78,6 +78,12 @@ class BranchAndBound
                                 const int & columnIndex,
                                 const int & constrType,
                                 const double & bound);
+    void addMultipleConstraintsToProblem(Problem * problem,
+                                         const int & columnIndex,
+                                         const QString &
+                                         colNamePrefix, 
+                                         const int & constrType,
+                                         const double & bound);
 };
 
 #endif /* BRANCHANDBOUND_H_ */

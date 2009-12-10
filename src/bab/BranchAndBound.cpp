@@ -154,9 +154,10 @@ void BranchAndBound::addMultipleConstraintsToProblem(Problem * problem,
 
 {
   int begin = columnIndex + 1;
-  for (int i = begin; i < indexesBranchingVars.count(); ++i) {
-    
-  }
+  QString currentPrefix;
+//  for (int i = begin; i < indexesBranchingVars.count(); ++i) {
+//    
+//  }
 }
 
 void BranchAndBound::addConstraintToProblem(Problem * problem, 
