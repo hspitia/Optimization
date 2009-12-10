@@ -69,7 +69,8 @@ class Problem
     bool isOverBound(const double & bound);
     bool isBelowBound(const double & bound);
     bool isMaximization();
-    QString getColumnName(const int & columnIndex);
+    QString getColumnName(const int & columnIndex) const;
+    QChar getColumnPrefixName(const int & columnIndex) const;
     
     // Access
     lprec * getModel() const;

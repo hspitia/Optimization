@@ -93,6 +93,12 @@ bool Problem::addColumn(double * column)
 
 double Problem::getObjective() const
 {
+  double x1 = getVariable(0);
+  double x2 = getVariable(1);
+  double obj = (5 * x1) + (4 * x2);
+  cout.precision(30);
+  cout << "\n\nObj calculada: " << obj << endl;
+  cout << "floor obj: " << floor(obj) << endl;
   return get_objective(model);
 }
 
@@ -113,7 +119,7 @@ double Problem::getVariable(const int & columnIndex) const
   int size = get_Ncolumns(model);
   double variables[size];
   
-  bool condition = columnIndex > 0 && columnIndex < size;
+  bool condition = columnIndex >= 0 && columnIndex < size;
   if (!condition) {
     cout << "ERROR!! Assert. Out of bounds. "
          << " On line " << __LINE__ 
@@ -135,6 +141,20 @@ bool Problem::isIntegerVariable(const int & columnIndex) const
 
 bool Problem::isIntegerSolution() const
 {
+//  bool isInteger = true;
+//  int size = get_Ncolumns(model); 
+//  double variables[size];
+//  if (get_variables(model, variables)){
+//    int i = 0;
+//    while (i < size && isInteger) {
+//      isInteger = utils::isInteger(variables[i]);
+//    }
+//  }
+  
+  
+  
+//  return isInteger;
+  cout <<__LINE__ << "\n\t" << "SOL in problem: " << getObjective();
   return utils::isInteger(getObjective());
 }
 
@@ -153,9 +173,25 @@ bool Problem::isMaximization()
   return is_maxim(model);
 }
 
-QString Problem::getColumnName(const int & columnIndex)
+QString Problem::getColumnName(const int & columnIndex) const
 {
-  return QString();
+  int size = get_Ncolumns(model);
+  bool condition = columnIndex >= 0 && columnIndex < size;
+  
+  if (!condition) {
+    cout << "ERROR!! Assert. Out of bounds in getColumnName. "
+         << " On line " << __LINE__ + 2
+         << " in file " << __FILE__ << "\n";
+    assert(condition);
+  }
+  
+  QString colName = QString(get_col_name(model, columnIndex));
+  return colName;
+}
+
+QChar Problem::getColumnPrefixName(const int & columnIndex) const
+{
+  return getColumnName(columnIndex).at(0);
 }
 
 lprec * Problem::getModel() const

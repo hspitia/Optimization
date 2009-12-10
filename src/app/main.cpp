@@ -31,6 +31,7 @@
 #include <iostream>
 using namespace std;;
 
+#include <utils/Utils.h>
 #include <utils/Problem.h>
 #include <bab/BranchAndBound.h>
 
@@ -84,21 +85,27 @@ void testBranchAndBound()
   model = read_LP("data/models/example_int_01.lp", NORMAL, "Modelo Inicial");
   if (model) {
     cout << "Modelo leído correctamente." << endl;
-//    print_lp(model);
+    print_lp(model);
   }
   
   Problem * problem = new Problem(model, "Problema original");
   
-  BranchAndBound * bbObject = new BranchAndBound(problem, 10000);
+  BranchAndBound * bbObject = new BranchAndBound(problem, -10000);
   
   QList<int> varsBranching;
   varsBranching << 0 << 1;
+  bbObject->setIndexesBranchingVars(varsBranching);
+  
+  Problem * bestSolution = bbObject->solveBb();
+  lprec * solution = bestSolution->getModel();
+  print_lp(solution);
+  print_objective(solution);
+//  cout << "\nSolución: "<< endl;
+  print_solution(solution, 1);
+//  cout << "\nRestricciones: "<< endl;
+  print_constraints(solution, 1);
   
 //  solve(problem->getModel());
-//  cout << problem->getVariable(1) << endl;
-  
-  
-  
 }
 
 int main(int argc, char *argv[])

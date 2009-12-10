@@ -31,6 +31,7 @@
 #include <utils/Utils.h>
 
 // Std
+#include <iostream>
 #include <cmath>
 
 using namespace std;
@@ -73,15 +74,15 @@ class BranchAndBound
     
     bool isOverBound(const Problem & problem);
     bool isBelowBound(const Problem & problem);
+    bool isIntegerSolution(const Problem & problem);
     QList<Problem *> branch(const Problem & problem);
+    QList<Problem *> binaryBranch(const Problem & problem);
     void addConstraintToProblem(Problem * problem, 
                                 const int & columnIndex,
                                 const int & constrType,
                                 const double & bound);
     void addMultipleConstraintsToProblem(Problem * problem,
                                          const int & columnIndex,
-                                         const QString &
-                                         colNamePrefix, 
                                          const int & constrType,
                                          const double & bound);
 };

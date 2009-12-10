@@ -22,7 +22,9 @@
 #define UTILS_H_
 
 // SYSTEM INCLUDES
+#include <QtCore>
 #include <cmath>
+#include <iostream>
 
 // PROJECT INCLUDES
 
@@ -32,26 +34,35 @@ namespace utils
   inline double round(double number) {
     return floor(number + 0.5);
   }
-   
+  
   inline float round(float number) {
     return floor(number + 0.5);
   }
   
-  inline double decimalPart(double number){
-    double integer = floor(number);
-    double decimal = number - integer;
+  inline long double decimalPart(long double number){
+    long double integer = floor(number);
+    long double decimal = number - integer;
+    
+    std::cout << "\nnumber: " << number 
+              << " integer: " << integer
+              << " decimal: " << decimal << endl;
+    
     return decimal;
   }
   
-  inline double decimalPart(float number){
-    float integer = floor(number);
-    float decimal = number - integer;
-    return decimal;
+  inline bool isInteger(long double number){
+    long double decimal =  decimalPart(number);
+    if (decimal != 0.0) {
+      long double diference = 1 - decimal;
+      long double tolerance = 0.000000001;
+      
+      if (diference <= tolerance)
+        return true;
+        
+      return false;
+    }
+    
+    return true;
   }
-  
-  inline bool isInteger(double number){
-    return decimalPart(number) == 0;
-  }
-  
 }
 #endif /* UTILS_H_ */
