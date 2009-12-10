@@ -50,10 +50,10 @@ BranchAndBound::~BranchAndBound()
 
 Problem * BranchAndBound::solveBb()
 {
-  if (originProblem->getProblemType() == Problem::MINIMIZATION)
-    return solveBbMin();
+  if (originProblem->isMaximization())
+    return solveBbMax();
 
-  return solveBbMax();
+  return solveBbMin();
 }
 
 Problem * BranchAndBound::solveBbMax()
@@ -65,14 +65,14 @@ Problem * BranchAndBound::solveBbMax()
     lprec * model = currentProblem->getModel();
     int result = solve(model);
     
-    bool feasible = result == 0 || result == 1;
-    bool belowBound = currentProblem->isBelowBound(bound);
-    bool integerSolution = currentProblem->isIntegerSolution();
+    bool isFeasible = result == 0 || result == 1;
+    bool isBelowBound = currentProblem->isBelowBound(bound);
+    bool isIntegerSolution = currentProblem->isIntegerSolution();
     
-    if (!feasible || belowBound || integerSolution) {
+    if (!isFeasible || isBelowBound || isIntegerSolution) {
       currentProblem->setFinished(true);
       
-      if (integerSolution && currentProblem->isOverBound(bound)) {
+      if (isIntegerSolution && currentProblem->isOverBound(bound)) {
           bound = currentProblem->getObjective();
           bestSolution = currentProblem;
       }
@@ -95,14 +95,14 @@ Problem * BranchAndBound::solveBbMin()
     lprec * model = currentProblem->getModel();
     int result = solve(model);
     
-    bool feasible = result == 0 || result == 1;
-    bool overBound = currentProblem->isOverBound(bound);
-    bool integerSolution = currentProblem->isIntegerSolution();
+    bool isFeasible = result == 0 || result == 1;
+    bool isOverBound = currentProblem->isOverBound(bound);
+    bool isIntegerSolution = currentProblem->isIntegerSolution();
     
-    if (!feasible || overBound || integerSolution) {
+    if (!isFeasible || isOverBound || isIntegerSolution) {
       currentProblem->setFinished(true);
       
-      if (integerSolution && currentProblem->isBelowBound(bound)) {
+      if (isIntegerSolution && currentProblem->isBelowBound(bound)) {
           bound = currentProblem->getObjective();
           bestSolution = currentProblem;
       }
@@ -143,6 +143,20 @@ QList<Problem *> BranchAndBound::branch(const Problem & problem)
   }
   
   return children;
+}
+
+void BranchAndBound::addMultipleConstraintsToProblem(Problem * problem,
+                                                     const int & columnIndex,
+                                                     const QString &
+                                                     colNamePrefix, 
+                                                     const int & constrType,
+                                                     const double & bound)
+
+{
+  int begin = columnIndex + 1;
+  for (int i = begin; i < indexesBranchingVars.count(); ++i) {
+    
+  }
 }
 
 void BranchAndBound::addConstraintToProblem(Problem * problem, 

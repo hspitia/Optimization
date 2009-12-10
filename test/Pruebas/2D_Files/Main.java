@@ -9,7 +9,8 @@ public class Main
 	public static void main (String[] args) throws Exception
 	{
 		//String input_name = "Tests/test_pdf.in";
-		String input_name = "Tests/1D_test.in";
+//		String input_name = "Tests/2D_test.in";
+		String input_name = args[0];
 		
 		// Data capture
 		Scanner sc = new Scanner(new File(input_name));

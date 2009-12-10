@@ -113,11 +113,12 @@ double Problem::getVariable(const int & columnIndex) const
   int size = get_Ncolumns(model);
   double variables[size];
   
-  if (columnIndex < 0 || columnIndex >= size) {
-    cout << "ERROR!! Assert. Out of bounds"
-         << " on line " << __LINE__  << "\n"
+  bool condition = columnIndex > 0 && columnIndex < size;
+  if (!condition) {
+    cout << "ERROR!! Assert. Out of bounds. "
+         << " On line " << __LINE__ 
          << " in file " << __FILE__  << "\n";
-    assert(false);
+    assert(condition);
   }
   
   get_variables(model, variables);
@@ -145,6 +146,16 @@ bool Problem::isOverBound(const double & bound)
 bool Problem::isBelowBound(const double & bound)
 {
   return compareObjectiveTo(bound) == -1;
+}
+
+bool Problem::isMaximization()
+{
+  return is_maxim(model);
+}
+
+QString Problem::getColumnName(const int & columnIndex)
+{
+  
 }
 
 lprec * Problem::getModel() const
@@ -175,14 +186,4 @@ bool Problem::isFinished()
 void Problem::setFinished(bool finished)
 {
   this->finished = finished;
-}
-
-int Problem::getProblemType()
-{
-  return problemType;
-}
-
-void Problem::setProblemType(ProblemType problemType)
-{
-  this->problemType = problemType;
 }

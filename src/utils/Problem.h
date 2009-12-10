@@ -44,14 +44,6 @@ using namespace std;
 class Problem
 {
   public:
-    enum ProblemType{
-      MAXIMIZATION, MINIMIZATION
-    };
-    
-    enum RelativeToBoundType{
-      OVER, BELOW
-    };
-    
     // Constructors
     Problem();
     Problem(lprec * model, const QString & id);
@@ -76,6 +68,8 @@ class Problem
     bool isIntegerSolution() const;
     bool isOverBound(const double & bound);
     bool isBelowBound(const double & bound);
+    bool isMaximization();
+    QString getColumnName(const int & columnIndex);
     
     // Access
     lprec * getModel() const;
@@ -84,15 +78,12 @@ class Problem
     void setId(QString id);
     bool isFinished();
     void setFinished(bool finished);
-    int getProblemType();
-    void setProblemType(ProblemType problemType);
     
   private:
     // Members
     lprec * model;
     QString id;
     bool finished;
-    ProblemType problemType;
     
 };
 

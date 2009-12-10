@@ -21,7 +21,6 @@
 
 #ifndef BRANCHANDBOUND_H_
 #define BRANCHANDBOUND_H_
-
 // Qt
 #include <QtCore/QStack>
 #include <QtCore/QList>
@@ -35,7 +34,6 @@
 #include <cmath>
 
 using namespace std;
-
 
 /**
  * 

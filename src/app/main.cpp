@@ -31,6 +31,10 @@
 #include <iostream>
 using namespace std;;
 
+#include <utils/Problem.h>
+#include <bab/BranchAndBound.h>
+
+
 void lpsolveDemo()
 {
   lprec *lp;
@@ -63,6 +67,7 @@ void lpsolveDemo()
 
   delete_lp(lp);
   
+  
   cout << "\nTerminado exitosamente!! "<< endl;
 }
 
@@ -73,12 +78,38 @@ int defaultApp(int argc, char *argv[])
   return app->exec();
 }
 
+void testBranchAndBound()
+{
+  lprec * model;
+  model = read_LP("data/models/example_int_01.lp", NORMAL, "Modelo Inicial");
+  if (model) {
+    cout << "Modelo leído correctamente." << endl;
+//    print_lp(model);
+  }
+  
+  Problem * problem = new Problem(model, "Problema original");
+  
+  BranchAndBound * bbObject = new BranchAndBound(problem, 10000);
+  
+  QList<int> varsBranching;
+  varsBranching << 0 << 1;
+  
+//  solve(problem->getModel());
+//  cout << problem->getVariable(1) << endl;
+  
+  
+  
+}
+
 int main(int argc, char *argv[])
 {
   
-  defaultApp(argc, argv);
+//  qDebug() << "Hola, esto es una prueba.\n";
+//  defaultApp(argc, argv);
+  testBranchAndBound();
 //  Q_UNUSED(argc);
 //  Q_UNUSED(argv);
 //  lpsolveDemo();
+  return 0;
 }
 

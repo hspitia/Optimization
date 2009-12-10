@@ -104,7 +104,7 @@ Dy6 - 0.0 + ey - 200 Ny6 <= 0;
 Dx6 + Dy6 = D6;
 
 
-// Calculo de los condicionales de la vereda más lejana
+// Calculo de los condicionales de la vereda mï¿½s lejana
 D0 - D1 - 200 r0 >= -200;
 D0 - D2 - 200 r0 >= -200;
 D0 - D3 - 200 r0 >= -200;
