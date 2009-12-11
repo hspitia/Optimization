@@ -72,6 +72,7 @@ void MainWindow::setUpScene(const int & regionSize,
   paintRegion(regionSize);
   paintTowns(townsNumbers, townsCoordinates);
   paintGraphLabels(regionSize);
+  paintSchool(QPointF(4.0,4.0));
 }
 
 void MainWindow::paintRegion(const int & regionSize)
@@ -138,9 +139,9 @@ void MainWindow::paintTowns(const QList<int> & townsNumbers,
           
   double yCoordinate = 0.0;
   double xCoordinate = 0.0;
-//  QPixmap town(":/icons/city_24");
+  QPixmap town(":/icons/city_24");
 //  QPixmap town(":/icons/city_32");
-  QPixmap town(":/icons/school_24");
+//  QPixmap town(":/icons/school_24");
   int halfIconSize = town.width() / 2;
   pen = QPen(QColor(Qt::blue));
   painter->setPen(pen);
@@ -159,6 +160,46 @@ void MainWindow::paintTowns(const QList<int> & townsNumbers,
     currentPoint = QPointF(xCoordinate, yCoordinate);
     painter->drawText(currentPoint, QString().setNum(townsNumbers.at(i)));
   }
+  
+  ui->imageLabel->setPixmap(*pixmap);
+  delete painter;
+}
+
+void MainWindow::paintSchool(const QPointF & schoolCoordinate)
+{
+  QPixmap * pixmap  = new QPixmap(*(ui->imageLabel->pixmap()));
+  QPainter * painter = new QPainter(pixmap);
+  QPen pen(QColor(20, 20, 20));
+//  painter->setPen(pen);
+//  painter->setBrush(Qt::darkBlue);
+  
+  painter->translate(margin, margin);
+  
+  int areaSize = imgSize - (margin * 2);
+          
+  double yCoordinate = 0.0;
+  double xCoordinate = 0.0;
+//  QPixmap town(":/icons/city_24");
+//  QPixmap town(":/icons/city_32");
+  QPixmap town(":/icons/school_24");
+  int halfIconSize = town.width() / 2;
+  pen = QPen(QColor(Qt::darkGreen));
+  painter->setPen(pen);
+  painter->setFont(QFont(QString("Arial"), 9, QFont::Bold));
+  painter->setLayoutDirection(Qt::LeftToRight);
+  
+//  for (int i = 0; i < townsCoordinates.count(); ++i) {
+  QPointF point = schoolCoordinate;
+  yCoordinate = areaSize - (point.y() * gridSize) - halfIconSize;
+  xCoordinate = (point.x() * gridSize) - halfIconSize;
+  QPointF currentPoint(xCoordinate, yCoordinate);
+  painter->drawPixmap(currentPoint, town);
+  
+  xCoordinate -= 13;
+//  yCoordinate += 2;
+  currentPoint = QPointF(xCoordinate, yCoordinate);
+  painter->drawText(currentPoint, QString("¡Eureka!"));
+//  }
   
   ui->imageLabel->setPixmap(*pixmap);
   delete painter;

@@ -46,6 +46,7 @@ class MainWindow : public QMainWindow
     void paintRegion(const int & regionSize);
     void paintTowns(const QList<int> & townsNumbers,
                     const QList<QPointF> & townsCoordinates);
+    void paintSchool(const QPointF & schoolCoordinate);
     void paintGraphLabels(const int & regionSize);
   
   private slots:

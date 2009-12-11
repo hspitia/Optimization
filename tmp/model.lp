@@ -7,7 +7,8 @@ min: A0 + A1 + A2 + A3 + A4 + A5 + A6;
 // Calculo de las Distancias entre la escuela y las veredas
 // Distancia de la escuela a 0
 
-// Distancia en XDx0 - ex + 2.2 - 20 Nx0 >= -20;
+// Distancia en X
+Dx0 - ex + 2.2 - 20 Nx0 >= -20;
 Dx0 - ex + 2.2 + 20 Nx0 <= 20;
 Dx0 - 2.2 + ex + 20 Nx0 >= 0;
 Dx0 - 2.2 + ex - 20 Nx0 <= 0;
@@ -23,7 +24,8 @@ Dx0 + Dy0 = D0;
 
 // Distancia de la escuela a 1
 
-// Distancia en XDx1 - ex + 3.6 - 20 Nx1 >= -20;
+// Distancia en X
+Dx1 - ex + 3.6 - 20 Nx1 >= -20;
 Dx1 - ex + 3.6 + 20 Nx1 <= 20;
 Dx1 - 3.6 + ex + 20 Nx1 >= 0;
 Dx1 - 3.6 + ex - 20 Nx1 <= 0;
@@ -39,7 +41,8 @@ Dx1 + Dy1 = D1;
 
 // Distancia de la escuela a 2
 
-// Distancia en XDx2 - ex + 1.2 - 20 Nx2 >= -20;
+// Distancia en X
+Dx2 - ex + 1.2 - 20 Nx2 >= -20;
 Dx2 - ex + 1.2 + 20 Nx2 <= 20;
 Dx2 - 1.2 + ex + 20 Nx2 >= 0;
 Dx2 - 1.2 + ex - 20 Nx2 <= 0;
@@ -55,7 +58,8 @@ Dx2 + Dy2 = D2;
 
 // Distancia de la escuela a 3
 
-// Distancia en XDx3 - ex + 5.5 - 20 Nx3 >= -20;
+// Distancia en X
+Dx3 - ex + 5.5 - 20 Nx3 >= -20;
 Dx3 - ex + 5.5 + 20 Nx3 <= 20;
 Dx3 - 5.5 + ex + 20 Nx3 >= 0;
 Dx3 - 5.5 + ex - 20 Nx3 <= 0;
@@ -71,7 +75,8 @@ Dx3 + Dy3 = D3;
 
 // Distancia de la escuela a 4
 
-// Distancia en XDx4 - ex + 7 - 20 Nx4 >= -20;
+// Distancia en X
+Dx4 - ex + 7 - 20 Nx4 >= -20;
 Dx4 - ex + 7 + 20 Nx4 <= 20;
 Dx4 - 7 + ex + 20 Nx4 >= 0;
 Dx4 - 7 + ex - 20 Nx4 <= 0;
@@ -87,7 +92,8 @@ Dx4 + Dy4 = D4;
 
 // Distancia de la escuela a 5
 
-// Distancia en XDx5 - ex + 9.8 - 20 Nx5 >= -20;
+// Distancia en X
+Dx5 - ex + 9.8 - 20 Nx5 >= -20;
 Dx5 - ex + 9.8 + 20 Nx5 <= 20;
 Dx5 - 9.8 + ex + 20 Nx5 >= 0;
 Dx5 - 9.8 + ex - 20 Nx5 <= 0;
@@ -103,7 +109,8 @@ Dx5 + Dy5 = D5;
 
 // Distancia de la escuela a 6
 
-// Distancia en XDx6 - ex + 7.6 - 20 Nx6 >= -20;
+// Distancia en X
+Dx6 - ex + 7.6 - 20 Nx6 >= -20;
 Dx6 - ex + 7.6 + 20 Nx6 <= 20;
 Dx6 - 7.6 + ex + 20 Nx6 >= 0;
 Dx6 - 7.6 + ex - 20 Nx6 <= 0;

@@ -69,7 +69,7 @@ void Modeler::calculateDistances()
     QString elmY = QString::number(townsCoordinates[di].y());
     
     model += "// Distancia de la escuela a " + i + "\n";
-    model += "\n// Distancia en X";
+    model += "\n// Distancia en X\n";
     model += "Dx" + i + " - ex + " + elmX + " - " + M + " Nx" + i + " >= -" + M
             + ";\n";
     model += "Dx" + i + " - ex + " + elmX + " + " + M + " Nx" + i + " <= " + M
