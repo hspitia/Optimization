@@ -31,6 +31,9 @@
 #include <gui/MainWindow.h>
 #include <parser/FileParser.h>
 #include <parser/ParametersSet.h>
+#include <parser/Modeler.h>
+#include <bab/BranchAndBound.h>
+#include <utils/Problem.h>
 
 
 // Cyclic reference 

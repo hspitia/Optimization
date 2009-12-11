@@ -1,15 +1,17 @@
 TEMPLATE = app
 TARGET = app
 QT += core \
-    gui 
-HEADERS += src/utils/Utils.h \
+    gui
+HEADERS += src/parser/Modeler.h \
+    src/utils/Utils.h \
     src/utils/Problem.h \
     src/utils/tree.h \
     src/parser/ParametersSet.h \
     src/app/ApplicationController.h \
     src/parser/FileParser.h \
     src/gui/MainWindow.h
-SOURCES += src/bab/BranchAndBound.cpp \
+SOURCES += src/parser/Modeler.cpp \
+    src/bab/BranchAndBound.cpp \
     src/utils/Problem.cpp \
     src/parser/ParametersSet.cpp \
     src/app/ApplicationController.cpp \
@@ -21,12 +23,10 @@ DEPENDPATH += . \
     src/
 INCLUDEPATH += . \
     src/
-unix:{
-    LIBS += -L/usr/lib/lpsolve \
-      -llpsolve55 \
-      -L/usr/lib \
-      -lcolamd
-    }
+unix::LIBS += -L/usr/lib/lpsolve \
+    -llpsolve55 \
+    -L/usr/lib \
+    -lcolamd
 win32 { 
     DEPENDPATH += include \
         include/lpsolve
@@ -37,4 +37,3 @@ win32 {
     CONFIG += console
 }
 RESOURCES += resources/resources.qrc
-#DEFINES += QT_NO_DEBUG_OUTPUT

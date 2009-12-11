@@ -35,26 +35,24 @@ class ParametersSet
     ParametersSet();
     ParametersSet(const ParametersSet & parametersSetObject);
     ParametersSet(int regionSize, int nTowns,
-                             QList<int> schoolNumbers,
-                             QList<QPointF> townsCoordinates);
+                  QList<int> schoolNumbers,
+                  QList<QPointF> townsCoordinates);
     ParametersSet & operator=(const ParametersSet & parametersSetObject);
     virtual ~ParametersSet();
     
-    int getNTowns();
+    int getNTowns() const;
     void setNTowns(const int & nTowns);
-    int getRegionSize();
+    int getRegionSize() const;
     void setRegionSize(const int & regionSize);
-    QList<QPointF> getTownsCoordinates();
+    QList<QPointF> getTownsCoordinates() const;
     void setTownsCoordinates(const QList<QPointF> & schoolCoordinates);
-    QList<int> getTownsNumbers();
+    QList<int> getTownsNumbers() const;
     void setTownsNumbers(const QList<int> & townsNumbers);
     
   private:
     int nTowns;
-    
-    int regionSize; /**< comment */
-    
-    QList<QPointF> townsCoordinates; 
+    int regionSize;
+    QList<QPointF> townsCoordinates;
     QList<int> townsNumbers;
     
 };

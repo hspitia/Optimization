@@ -47,7 +47,32 @@ bool ApplicationController::loadNewProblem(const QString & filePath)
     return false;
   
   parametersSet = new ParametersSet(*(fileParser->getParametersSet()));
+  
+  Modeler * modeler = new Modeler(*parametersSet);
+  modeler->generateModel(true);
+  succes = modeler->writeModel("tmp/model.lp");
+  
   delete fileParser;
+  delete modeler;
+  
+  if(!succes)
+    return false;
+  
+  lprec * model;
+  model = read_LP("tmp/model.lp", NORMAL, "Modelo Inicial");
+  if (model) {
+    cout << "Modelo leído correctamente." << endl;
+    Problem * originProblem = new Problem(model, "Problema original");
+    double bound = parametersSet->getRegionSize() * 2 * 100;
+    BranchAndBound * branchAndBound = new BranchAndBound(originProblem, bound);
+    print_lp(originProblem->getModel());
+    cout << "Branching variables: " << endl 
+         << qPrintable(branchAndBound->indexesBranchingVarsToString()) << endl;
+  }
+  else
+    return false;
+  
+  
   /* ************** DATA VERIFICATION ***************** */
   /*
   cout << "DEBUG - BEGIN - ApplicationController::52 - Data Verification" << endl;

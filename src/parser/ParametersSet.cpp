@@ -63,7 +63,7 @@ ParametersSet::~ParametersSet()
   // TODO Auto-generated destructor stub
 }
 
-int ParametersSet::getRegionSize()
+int ParametersSet::getRegionSize() const
 {
   return regionSize;
 }
@@ -73,7 +73,7 @@ void ParametersSet::setRegionSize(const int & regionSize)
   this->regionSize = regionSize;
 }
 
-int ParametersSet::getNTowns()
+int ParametersSet::getNTowns() const
 {
   return nTowns;
 }
@@ -83,7 +83,7 @@ void ParametersSet::setNTowns(const int & nTowns)
   this->nTowns = nTowns;
 }
 
-QList<QPointF> ParametersSet::getTownsCoordinates()
+QList<QPointF> ParametersSet::getTownsCoordinates() const
 {
   return townsCoordinates;
 }
@@ -94,7 +94,7 @@ void ParametersSet::setTownsCoordinates(const QList<QPointF> &
   this->townsCoordinates = schoolCoordinates;
 }
 
-QList<int> ParametersSet::getTownsNumbers()
+QList<int> ParametersSet::getTownsNumbers() const
 {
   return townsNumbers;
 }

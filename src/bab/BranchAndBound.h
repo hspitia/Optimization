@@ -64,6 +64,7 @@ class BranchAndBound
     void setBound(double bound);
     QList<int> getIndexesBranchingVars();
     void setIndexesBranchingVars(QList<int> indexesBranchingVars);
+    QString indexesBranchingVarsToString() const;
     
   private:
     Problem * originProblem;
@@ -71,6 +72,8 @@ class BranchAndBound
     QStack<Problem *> problemsToSolve;
     double bound;
     QList<int> indexesBranchingVars;
+    
+    void initIndexesBranchingVars();
     
     bool isOverBound(const Problem & problem);
     bool isBelowBound(const Problem & problem);

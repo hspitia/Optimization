@@ -82,8 +82,10 @@ int defaultApp(int argc, char *argv[])
 void testBranchAndBound()
 {
   lprec * model;
-  model = read_LP("data/models/example_int_01.lp", NORMAL, "Modelo Inicial");
+//  model = read_LP("data/models/example_int_01.lp", NORMAL, "Modelo Inicial");
+  model = read_LP("data/models/example_int_02.lp", NORMAL, "Modelo Inicial");
   if (model) {
+    cout.precision(22);
     cout << "Modelo leído correctamente." << endl;
     print_lp(model);
   }
@@ -93,27 +95,23 @@ void testBranchAndBound()
   BranchAndBound * bbObject = new BranchAndBound(problem, -10000);
   
   QList<int> varsBranching;
-  varsBranching << 0 << 1;
-  bbObject->setIndexesBranchingVars(varsBranching);
+//  varsBranching << 0 << 1;
+//  bbObject->setIndexesBranchingVars(varsBranching);
   
   Problem * bestSolution = bbObject->solveBb();
   lprec * solution = bestSolution->getModel();
   print_lp(solution);
-  print_objective(solution);
-//  cout << "\nSolución: "<< endl;
-  print_solution(solution, 1);
-//  cout << "\nRestricciones: "<< endl;
   print_constraints(solution, 1);
-  
-//  solve(problem->getModel());
+  print_objective(solution);
+  print_solution(solution, 1);
 }
 
 int main(int argc, char *argv[])
 {
   
 //  qDebug() << "Hola, esto es una prueba.\n";
-//  defaultApp(argc, argv);
-  testBranchAndBound();
+  defaultApp(argc, argv);
+//  testBranchAndBound();
 //  Q_UNUSED(argc);
 //  Q_UNUSED(argv);
 //  lpsolveDemo();

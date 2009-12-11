@@ -44,11 +44,12 @@ void MainWindow::newProblemInput()
   if (!fileName.isEmpty()) {
     bool succes = parentApplication->loadNewProblem(fileName);
     if (succes){
-      cout << "MainWindow::44 - ok" << endl;
+//      cout << "MainWindow::44 - ok" << endl;
 //      paintRegion(parentApplication->getParametersSet()->getRegionSize());
-      setUpScene(parentApplication->getParametersSet()->getRegionSize(),
-                 parentApplication->getParametersSet()->getTownsNumbers(),
-                 parentApplication->getParametersSet()->getTownsCoordinates());
+      ParametersSet * parametersSet = parentApplication->getParametersSet();
+      setUpScene(parametersSet->getRegionSize(),
+                 parametersSet->getTownsNumbers(),
+                 parametersSet->getTownsCoordinates());
     }
     else{
       QMessageBox::critical(this, tr("Error en el formato de archivo"),

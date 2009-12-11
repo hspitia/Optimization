@@ -43,9 +43,9 @@ namespace utils
     long double integer = floor(number);
     long double decimal = number - integer;
     
-    std::cout << "\nnumber: " << number 
-              << " integer: " << integer
-              << " decimal: " << decimal << endl;
+//    std::cout << "\nnumber: " << number 
+//              << " integer: " << integer
+//              << " decimal: " << decimal << endl;
     
     return decimal;
   }

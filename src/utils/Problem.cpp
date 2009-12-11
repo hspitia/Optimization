@@ -58,10 +58,16 @@ Problem::~Problem()
     delete_lp(model);
 }
 
-bool Problem::getVariables(double * variables)
+bool Problem::getVariables(double variables[], int & size)
 {
 //  get_variables(lprec *lp, REAL * variables);
+  size = get_Ncolumns(model);
   return get_variables(model, variables);
+}
+
+int Problem::getNColumns() const
+{
+  return get_Ncolumns(model);
 }
 
 bool Problem::addConstraint(double * row, int constrType, double rhValue)
@@ -93,12 +99,12 @@ bool Problem::addColumn(double * column)
 
 double Problem::getObjective() const
 {
-  double x1 = getVariable(0);
-  double x2 = getVariable(1);
-  double obj = (5 * x1) + (4 * x2);
-  cout.precision(30);
-  cout << "\n\nObj calculada: " << obj << endl;
-  cout << "floor obj: " << floor(obj) << endl;
+//  double x1 = getVariable(0);
+//  double x2 = getVariable(1);
+//  double obj = (5 * x1) + (4 * x2);
+//  cout.precision(30);
+//  cout << "\n\nObj calculada: " << obj << endl;
+//  cout << "floor obj: " << floor(obj) << endl;
   return get_objective(model);
 }
 
@@ -154,7 +160,7 @@ bool Problem::isIntegerSolution() const
   
   
 //  return isInteger;
-  cout <<__LINE__ << "\n\t" << "SOL in problem: " << getObjective();
+//  cout <<__LINE__ << "\n\t" << "SOL in problem: " << getObjective();
   return utils::isInteger(getObjective());
 }
 
@@ -185,7 +191,7 @@ QString Problem::getColumnName(const int & columnIndex) const
     assert(condition);
   }
   
-  QString colName = QString(get_col_name(model, columnIndex));
+  QString colName = QString(get_col_name(model, columnIndex + 1));
   return colName;
 }
 

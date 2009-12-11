@@ -19,7 +19,7 @@
  *  Description:  
  */
 
-#define DEBUG_MODE
+//#define DEBUG_MODE
 
 #ifdef DEBUG_MODE
 #define TRACE(arg) (std::cout << "\nDEBUG - " << __FILE__ << ", line: " << arg << std::endl)
@@ -38,6 +38,7 @@ BranchAndBound::BranchAndBound()
   this->bestSolution = 0;
   this->problemsToSolve = QStack<Problem *> ();
   this->bound = 0;
+  this->indexesBranchingVars = QList<int>();
 }
 
 BranchAndBound::BranchAndBound(Problem * originProblem, double bound)
@@ -46,6 +47,8 @@ BranchAndBound::BranchAndBound(Problem * originProblem, double bound)
   this->bestSolution = 0;
   this->problemsToSolve = QStack<Problem *> ();
   this->bound = bound;
+  initIndexesBranchingVars();
+  
 }
 
 BranchAndBound::~BranchAndBound()
@@ -57,6 +60,22 @@ BranchAndBound::~BranchAndBound()
   if (bestSolution)
     delete bestSolution;
   bestSolution = 0;
+}
+
+void BranchAndBound::initIndexesBranchingVars()
+{
+  indexesBranchingVars = QList<int> ();
+  
+  for (int i = 0; i < originProblem->getNColumns(); ++i) {
+    QChar prefix = originProblem->getColumnPrefixName(i);
+    
+    bool isIntegerPrefix = 
+            prefix == 'N' || prefix == 'n' || prefix == 'R' || prefix == 'r';
+    
+    if (isIntegerPrefix)
+      indexesBranchingVars.append(i);
+    
+  }
 }
 
 Problem * BranchAndBound::solveBb()
@@ -215,6 +234,20 @@ QList<Problem *> BranchAndBound::binaryBranch(const Problem & problem)
   return children;
 }
 
+void BranchAndBound::addConstraintToProblem(Problem * problem,
+                                            const int & columnIndex,
+                                            const int & constrType,
+                                            const double & bound)
+{
+  int colno[1];
+  colno[0] = columnIndex + 1;
+  
+  double sparserow[1];
+  sparserow[0] = 1.0;
+  
+  problem->addConstraintex(1, sparserow, colno, constrType, bound);
+}
+
 void BranchAndBound::addMultipleConstraintsToProblem(Problem * problem,
                                                      const int & columnIndex,
                                                      const int & constrType,
@@ -228,18 +261,16 @@ void BranchAndBound::addMultipleConstraintsToProblem(Problem * problem,
   }
 }
 
-void BranchAndBound::addConstraintToProblem(Problem * problem,
-                                            const int & columnIndex,
-                                            const int & constrType,
-                                            const double & bound)
+QString BranchAndBound::indexesBranchingVarsToString() const
 {
-  int colno[1];
-  colno[0] = columnIndex + 1;
+  QString outString = "( ";
   
-  double sparserow[1];
-  sparserow[0] = 1.0;
+  foreach (int columnIndex, indexesBranchingVars)
+    outString += originProblem->getColumnName(columnIndex) + " ";
   
-  problem->addConstraintex(1, sparserow, colno, constrType, bound);
+  outString += ")";
+  
+  return outString;
 }
 
 bool BranchAndBound::isOverBound(const Problem & problem)
