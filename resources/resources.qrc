@@ -5,5 +5,10 @@
         <file alias="school_16" >icons/school_icon_16.png</file>
         <file alias="city_24" >icons/city_icon_24.png</file>
         <file alias="school_24" >icons/school_icon_24.png</file>
+        <file alias="run_16" >icons/run_icon_16_01.png</file>
+        <file alias="run_32_02" >icons/run_icon_32_02.png</file>
+        <file alias="run_32_01" >icons/run_icon_32_01.png</file>
+        <file alias="exit_16" >icons/exit_icon_16.png</file>
+        <file alias="exit_24" >icons/exit_icon_24.png</file>
     </qresource>
 </RCC>

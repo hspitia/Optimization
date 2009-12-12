@@ -106,12 +106,41 @@ void testBranchAndBound()
   print_solution(solution, 1);
 }
 
+void testBinaryBranchAndBound()
+{
+  lprec * model;
+  model = read_LP("data/models/model_1d_01.lp", NORMAL, "Modelo Inicial");
+  if (model) {
+    cout.precision(22);
+    cout << "Modelo leído correctamente." << endl;
+    print_lp(model);
+  }
+  
+  Problem * problem = new Problem(model, "Problema original");
+  
+  BranchAndBound * bbObject = new BranchAndBound(problem, 10000);
+  
+  Problem * bestSolution = bbObject->solveBb(BranchAndBound::BINARY_BRANCHING);
+  
+  if (bestSolution != 0) {
+    lprec * solution = bestSolution->getModel();
+    print_lp(solution);
+    print_constraints(solution, 1);
+    print_objective(solution);
+    print_solution(solution, 1);
+  }
+  else {
+    cout << "\n\nOoooooppppssss!. Error"<< endl;
+  }
+}
+
 int main(int argc, char *argv[])
 {
   
 //  qDebug() << "Hola, esto es una prueba.\n";
-  defaultApp(argc, argv);
+//  defaultApp(argc, argv);
 //  testBranchAndBound();
+  testBinaryBranchAndBound();
 //  Q_UNUSED(argc);
 //  Q_UNUSED(argv);
 //  lpsolveDemo();

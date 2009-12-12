@@ -47,6 +47,11 @@ class BranchAndBound
       DFS
     };
     
+    enum BranchingType
+    {
+      INTEGER_BRANCHING, BINARY_BRANCHING
+    };
+    
     BranchAndBound();
     BranchAndBound(Problem * originProblem, double bound);
     virtual ~BranchAndBound();
@@ -57,14 +62,16 @@ class BranchAndBound
     void setProblemsToSolve(QStack<Problem *> problemsToSolve);
     Problem * getOriginProblem();
     void setOriginProblem(Problem * originProblem);
-    Problem * solveBb();
-    Problem * solveBbMax();
-    Problem * solveBbMin();
+    Problem * solveBb(BranchingType branchingType = INTEGER_BRANCHING);
+    Problem * solveBbMax(BranchingType branchingType);
+    Problem * solveBbMin(BranchingType branchingType);
     double getBound();
     void setBound(double bound);
     QList<int> getIndexesBranchingVars();
     void setIndexesBranchingVars(QList<int> indexesBranchingVars);
     QString indexesBranchingVarsToString() const;
+    int getIterationsCounter();
+    int getNodesCounter();
     
   private:
     Problem * originProblem;
@@ -72,14 +79,17 @@ class BranchAndBound
     QStack<Problem *> problemsToSolve;
     double bound;
     QList<int> indexesBranchingVars;
+    int iterationsCounter;
+    int nodesCounter;
     
     void initIndexesBranchingVars();
     
     bool isOverBound(const Problem & problem);
     bool isBelowBound(const Problem & problem);
     bool isIntegerSolution(const Problem & problem);
-    QList<Problem *> branch(const Problem & problem);
-    QList<Problem *> binaryBranch(const Problem & problem);
+    QList<Problem *> branch(const Problem & problem, BranchingType branchType);
+    QList<Problem *> integerBranching(const Problem & problem);
+    QList<Problem *> binaryBranching(const Problem & problem);
     void addConstraintToProblem(Problem * problem, 
                                 const int & columnIndex,
                                 const int & constrType,

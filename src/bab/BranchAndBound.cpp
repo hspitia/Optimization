@@ -19,12 +19,11 @@
  *  Description:  
  */
 
-//#define DEBUG_MODE
+#define DEBUG_MODE
 
 #ifdef DEBUG_MODE
 #define TRACE(arg) (std::cout << "\nDEBUG - " << __FILE__ << ", line: " << arg << std::endl)
 #define DEBUG(arg) (std::cout << "\t" << arg)
-//#define DEB(arg) (std::cout << "\t" << arg)
 #else
 #define TRACE(arg) sizeof(std::cout << arg << std::endl)
 #define DEBUG(arg) sizeof(std::cout << arg)
@@ -39,6 +38,8 @@ BranchAndBound::BranchAndBound()
   this->problemsToSolve = QStack<Problem *> ();
   this->bound = 0;
   this->indexesBranchingVars = QList<int>();
+  this->iterationsCounter = 0;
+  this->nodesCounter = 0;
 }
 
 BranchAndBound::BranchAndBound(Problem * originProblem, double bound)
@@ -47,8 +48,9 @@ BranchAndBound::BranchAndBound(Problem * originProblem, double bound)
   this->bestSolution = 0;
   this->problemsToSolve = QStack<Problem *> ();
   this->bound = bound;
+  this->iterationsCounter = 0;
+  this->nodesCounter = 0;
   initIndexesBranchingVars();
-  
 }
 
 BranchAndBound::~BranchAndBound()
@@ -78,19 +80,22 @@ void BranchAndBound::initIndexesBranchingVars()
   }
 }
 
-Problem * BranchAndBound::solveBb()
+Problem * BranchAndBound::solveBb(BranchingType branchingType)
 {
   if (originProblem->isMaximization())
-    return solveBbMax();
+    return solveBbMax(branchingType);
   
-  return solveBbMin();
+  return solveBbMin(branchingType);
 }
 
-Problem * BranchAndBound::solveBbMax()
+Problem * BranchAndBound::solveBbMax(BranchingType branchingType)
 {
   problemsToSolve.push(originProblem);
 //  int limit = 7;
-  int i = 0;
+//  int i = 0;
+  iterationsCounter = 0;
+  nodesCounter = 0;
+  
   while (!problemsToSolve.isEmpty()){//  && i < limit) {
     Problem * currentProblem = problemsToSolve.pop();
     lprec * model = currentProblem->getModel();
@@ -119,49 +124,86 @@ Problem * BranchAndBound::solveBbMax()
     }
     else {
       TRACE (__LINE__ << "\n\t" << "Else -> Ramificar");
-      QList<Problem *> children = branch(*currentProblem);
-      foreach (Problem * p, children)
+      QList<Problem *> children = branch(*currentProblem, branchingType);
+      foreach (Problem * p, children){
           problemsToSolve.push(p);
-      
+          ++nodesCounter;
+          TRACE (__LINE__ << "\n\t" << "nodos: " << nodesCounter);
+      }
     }
-    ++i;
+//    ++i;
+    ++iterationsCounter;
+    TRACE (__LINE__ << "\n\t" << "Iteraciones: " << iterationsCounter);
   }
   return bestSolution;
 }
 
-Problem * BranchAndBound::solveBbMin()
+Problem * BranchAndBound::solveBbMin(BranchingType branchingType)
 {
   problemsToSolve.push(originProblem);
+  int limit = 7;
+  int i = 0;
+  iterationsCounter = 0;
+  nodesCounter = 0;
   
-  /*while (!problemsToSolve.isEmpty()) {
-   Problem * currentProblem = problemsToSolve.pop();
-   lprec * model = currentProblem->getModel();
-   int result = solve(model);
-   
-   bool isFeasible = result == 0 || result == 1;
-   bool isOverBound = currentProblem->isOverBound(bound);
-   bool isIntegerSolution = currentProblem->isIntegerSolution();
-   
-   if (!isFeasible || isOverBound || isIntegerSolution) {
-   currentProblem->setFinished(true);
-   
-   if (isIntegerSolution && currentProblem->isBelowBound(bound)) {
-   bound = currentProblem->getObjective();
-   bestSolution = currentProblem;
-   }
-   
-   }
-   else {
-   QList<Problem *> children = branch(*currentProblem);
-   foreach(Problem * p, children)
-   problemsToSolve.push(p);
-   }
-   }*/
-  TRACE("esto es otra prueba");
+  while (!problemsToSolve.isEmpty()  /*&& i < limit*/) {
+    Problem * currentProblem = problemsToSolve.pop();
+    lprec * model = currentProblem->getModel();
+    int result = solve(model);
+    print_solution(model, 1);
+    TRACE (__LINE__ << "\n\t" << "SOLUCION: " << currentProblem->getObjective());
+    bool isFeasible = result == 0 || result == 1;
+    bool isOverBound = currentProblem->isOverBound(bound);
+//    bool isIntSolution = currentProblem->isIntegerSolution();
+    bool isIntSolution = isIntegerSolution(*currentProblem);
+        TRACE (__LINE__ << "\n\t" << boolalpha  
+               << " \n\tisFeasible: " << isFeasible 
+               << " \n\tisOverBound: " << isOverBound 
+               << " \n\tisIntegerSolution: " << isIntSolution);
+
+    DEBUG ( boolalpha << " Pila vacía:  "<<problemsToSolve.isEmpty());
+    if (!isFeasible || isOverBound || isIntSolution) {
+      currentProblem->setFinished(true);
+      TRACE (__LINE__ << "\n\t" << "Dentro del primer condicional. Problema finalizado");
+      if (isIntSolution && currentProblem->isOverBound(bound)) {
+        bound = currentProblem->getObjective();
+        bestSolution = currentProblem;
+        TRACE (__LINE__ << "\n\t" << "\t\tSolucion entera. Variables enteras.");
+        DEBUG ( "bound: " << bound << endl);
+      }
+    }
+    else {
+      QString bType = "BINARY";
+      if (branchingType == INTEGER_BRANCHING)
+        bType = "INTEGER";
+      
+      TRACE (__LINE__ << "\n\t" << "Else -> Ramificar\n\tTipo ramificación: " 
+             << qPrintable(bType));
+      
+      QList<Problem *> children = branch(*currentProblem, branchingType);
+      foreach (Problem * p, children){
+          problemsToSolve.push(p);
+          ++nodesCounter;
+          TRACE (__LINE__ << "\n\t" << "nodos: " << nodesCounter);
+      }
+    }
+    ++i;
+    ++iterationsCounter;
+    TRACE (__LINE__ << "\n\t" << "Iteraciones: " << iterationsCounter);
+  }
   return bestSolution;
 }
 
-QList<Problem *> BranchAndBound::branch(const Problem & problem)
+QList<Problem *> BranchAndBound::branch(const Problem & problem, 
+                                        BranchingType branchingType)
+{
+  if (branchingType == INTEGER_BRANCHING)
+    return integerBranching(problem);
+  
+  return binaryBranching(problem);
+}
+
+QList<Problem *> BranchAndBound::integerBranching(const Problem & problem)
 {
   QList<Problem *> children;
   
@@ -200,33 +242,44 @@ QList<Problem *> BranchAndBound::branch(const Problem & problem)
   return children;
 }
 
-QList<Problem *> BranchAndBound::binaryBranch(const Problem & problem)
+QList<Problem *> BranchAndBound::binaryBranching(const Problem & problem)
 {
   QList<Problem *> children;
   
   int i = 0;
   bool branched = false;
   
+  TRACE (__LINE__ << "\n\t" << "binaryBranching");
+//  DEBUG ("");
   while (i < indexesBranchingVars.count() && !branched) {
     int columnIndex = indexesBranchingVars.at(i);
+    
     if (!problem.isIntegerVariable(columnIndex)) {
       double lowerBound = 0.0;
       double upperBound = 1.0;
-      QChar prefix = problem.getColumnPrefixName(columnIndex);
-        Problem * newProblem = new Problem(problem);
-        addConstraintToProblem(newProblem, columnIndex, EQ, lowerBound);
-        children.append(newProblem);
-        
-        newProblem = new Problem(problem);
-        addConstraintToProblem(newProblem, columnIndex, EQ, upperBound);
-        if (prefix == 'r' || prefix == 'R') {
-          addMultipleConstraintsToProblem(newProblem, columnIndex, EQ, 
-                                          lowerBound);
-        }
-        children.append(newProblem);
-        branched = true;
-        newProblem = 0;
+      QChar varPrefix = problem.getColumnPrefixName(columnIndex);
       
+      // Nuevo nodo / problema
+      Problem * newProblem = new Problem(problem);
+      
+      // Adición de la restricción con la variable = 0
+      addConstraintToProblem(newProblem, columnIndex, EQ, lowerBound);
+      children.append(newProblem);
+      
+      // Nuevo nodo / problema
+      newProblem = new Problem(problem);
+      
+      // Creación de nodo con restricción de variable = 1
+      addConstraintToProblem(newProblem, columnIndex, EQ, upperBound);
+      
+      // Si es una variable ri (vereda más lejana), las demás ri son iguales a 0
+      if (varPrefix == 'r' || varPrefix == 'R') {
+        addMultipleConstraintsToProblem(newProblem, columnIndex, EQ, 
+                                        lowerBound);
+      }
+      children.append(newProblem);
+      branched = true;
+      newProblem = 0;
     }
     ++i;
   }
@@ -246,6 +299,7 @@ void BranchAndBound::addConstraintToProblem(Problem * problem,
   sparserow[0] = 1.0;
   
   problem->addConstraintex(1, sparserow, colno, constrType, bound);
+  print_lp(problem->getModel());
 }
 
 void BranchAndBound::addMultipleConstraintsToProblem(Problem * problem,
@@ -254,10 +308,13 @@ void BranchAndBound::addMultipleConstraintsToProblem(Problem * problem,
                                                      const double & bound)
 {
   for (int i = 0; i < indexesBranchingVars.count(); ++i) {
-    int columnIndex = indexesBranchingVars.at(i);
-    QChar currentPrefix = problem->getColumnPrefixName(columnIndex);
-    if (currentPrefix == 'r' || currentPrefix == 'R')
-      addConstraintToProblem(problem, columnIndex, EQ, bound);
+    int currentIndex = indexesBranchingVars.at(i);
+    QChar currentPrefix = problem->getColumnPrefixName(currentIndex);
+    bool isIntegerPrefix = currentPrefix == 'r' || currentPrefix == 'R';
+    
+    if (isIntegerPrefix && currentIndex != columnIndex)
+      addConstraintToProblem(problem, currentIndex, EQ, bound);
+      print_lp(problem->getModel());
   }
 }
 
@@ -293,12 +350,10 @@ bool BranchAndBound::isIntegerSolution(const Problem & problem)
   while (i < indexesBranchingVars.count() && isInteger) {
     int variableIndex = indexesBranchingVars.at(i);
     isInteger = problem.isIntegerVariable(variableIndex);
+    ++i;
   }
   
-  if (isInteger)
-    return true;
-
-  return false;
+  return isInteger;
 }
 
 Problem * BranchAndBound::getBestSolution()
@@ -349,5 +404,14 @@ QList<int> BranchAndBound::getIndexesBranchingVars()
 void BranchAndBound::setIndexesBranchingVars(QList<int> indexesBranchingVars)
 {
   this->indexesBranchingVars = indexesBranchingVars;
+}
+
+int BranchAndBound::getIterationsCounter() {
+  return iterationsCounter;
+}
+
+int BranchAndBound::getNodesCounter()
+{
+  return nodesCounter;
 }
 

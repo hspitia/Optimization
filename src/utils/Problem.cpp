@@ -156,9 +156,7 @@ bool Problem::isIntegerSolution() const
 //      isInteger = utils::isInteger(variables[i]);
 //    }
 //  }
-  
-  
-  
+//  
 //  return isInteger;
 //  cout <<__LINE__ << "\n\t" << "SOL in problem: " << getObjective();
   return utils::isInteger(getObjective());

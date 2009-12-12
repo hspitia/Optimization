@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Ubicación óptima de la escuela</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../../resources/resources.qrc">
+    <normaloff>:/icons/school_16</normaloff>:/icons/school_16</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
@@ -35,13 +39,16 @@
         <property name="widgetResizable">
          <bool>true</bool>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
         <widget class="QWidget" name="scrollAreaWidgetContents">
          <property name="geometry">
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>405</width>
-           <height>398</height>
+           <width>377</width>
+           <height>412</height>
           </rect>
          </property>
          <layout class="QGridLayout" name="gridLayout">
@@ -75,7 +82,7 @@
      <x>0</x>
      <y>0</y>
      <width>847</width>
-     <height>25</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArchivo">
@@ -83,6 +90,7 @@
      <string>Archivo</string>
     </property>
     <addaction name="newProblemInputAction"/>
+    <addaction name="solveAction"/>
     <addaction name="exitAction"/>
    </widget>
    <addaction name="menuArchivo"/>
@@ -105,25 +113,30 @@
     <bool>false</bool>
    </attribute>
    <addaction name="newProblemInputAction"/>
+   <addaction name="solveAction"/>
+   <addaction name="exitAction"/>
   </widget>
   <widget class="QDockWidget" name="InformationDockWidget">
    <property name="minimumSize">
     <size>
-     <width>350</width>
+     <width>440</width>
      <height>172</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
-     <width>500</width>
+     <width>1000</width>
      <height>1000</height>
     </size>
+   </property>
+   <property name="styleSheet">
+    <string/>
    </property>
    <property name="allowedAreas">
     <set>Qt::BottomDockWidgetArea|Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Informaci´on</string>
+    <string>Información</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
@@ -133,7 +146,7 @@
      <item row="0" column="0">
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="resultsTab">
         <attribute name="title">
@@ -153,8 +166,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>374</width>
-              <height>354</height>
+              <width>400</width>
+              <height>381</height>
              </rect>
             </property>
             <layout class="QGridLayout" name="gridLayout_3">
@@ -162,7 +175,15 @@
               <number>0</number>
              </property>
              <item row="0" column="0">
-              <widget class="QTextEdit" name="textEdit"/>
+              <widget class="QTextEdit" name="resultsTextEdit">
+               <property name="styleSheet">
+                <string>/*padding: 4px;*/
+font: 8pt &quot;Bitstream Vera Sans Mono&quot;;</string>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -188,8 +209,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>374</width>
-              <height>346</height>
+              <width>400</width>
+              <height>381</height>
              </rect>
             </property>
             <layout class="QGridLayout" name="gridLayout_6">
@@ -197,7 +218,15 @@
               <number>0</number>
              </property>
              <item row="0" column="0">
-              <widget class="QTextEdit" name="textEdit_2"/>
+              <widget class="QTextEdit" name="modelTextEdit">
+               <property name="styleSheet">
+                <string>/*padding: 4px;*/
+font: 8pt &quot;Bitstream Vera Sans Mono&quot;;</string>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -212,19 +241,25 @@
         <layout class="QGridLayout" name="gridLayout_9">
          <item row="0" column="0">
           <widget class="QScrollArea" name="scrollArea_4">
+           <property name="styleSheet">
+            <string/>
+           </property>
            <property name="frameShape">
             <enum>QFrame::NoFrame</enum>
            </property>
            <property name="widgetResizable">
             <bool>true</bool>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
            <widget class="QWidget" name="scrollAreaWidgetContents_4">
             <property name="geometry">
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>374</width>
-              <height>346</height>
+              <width>400</width>
+              <height>381</height>
              </rect>
             </property>
             <layout class="QGridLayout" name="gridLayout_7">
@@ -232,7 +267,15 @@
               <number>0</number>
              </property>
              <item row="0" column="0">
-              <widget class="QTextEdit" name="textEdit_3"/>
+              <widget class="QTextEdit" name="inputFileTextEdit">
+               <property name="styleSheet">
+                <string>/*padding: 4px;*/
+font: 8pt &quot;Bitstream Vera Sans Mono&quot;;</string>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -251,15 +294,28 @@
      <normaloff>:/icons/open_blue</normaloff>:/icons/open_blue</iconset>
    </property>
    <property name="text">
-    <string>Nuevo problema</string>
+    <string>&amp;Nuevo problema</string>
    </property>
    <property name="toolTip">
     <string>Nuevo problema</string>
    </property>
   </action>
   <action name="exitAction">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/exit_16</normaloff>:/icons/exit_16</iconset>
+   </property>
    <property name="text">
     <string>Salir</string>
+   </property>
+  </action>
+  <action name="solveAction">
+   <property name="icon">
+    <iconset resource="../../resources/resources.qrc">
+     <normaloff>:/icons/run_32_01</normaloff>:/icons/run_32_01</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Resolver</string>
    </property>
   </action>
  </widget>

@@ -26,6 +26,8 @@ void MainWindow::connectSignalsSlots()
 {
   connect(ui->newProblemInputAction, SIGNAL(triggered()), this,
           SLOT(newProblemInput()));
+  connect(ui->solveAction, SIGNAL(triggered()), this,
+          SLOT(solveProblem()));
   
   
 }
@@ -38,20 +40,13 @@ void MainWindow::initComponents()
 
 void MainWindow::newProblemInput()
 {
-  QString fileName = QFileDialog::getOpenFileName(this, tr("Abrir archivo"),
+  QString fileName = 
+          QFileDialog::getOpenFileName(this, tr("Abrir archivo"),
                                                   "data/input/",
                                                   tr("Texto (*.txt)"));
   if (!fileName.isEmpty()) {
     bool succes = parentApplication->loadNewProblem(fileName);
-    if (succes){
-//      cout << "MainWindow::44 - ok" << endl;
-//      paintRegion(parentApplication->getParametersSet()->getRegionSize());
-      ParametersSet * parametersSet = parentApplication->getParametersSet();
-      setUpScene(parametersSet->getRegionSize(),
-                 parametersSet->getTownsNumbers(),
-                 parametersSet->getTownsCoordinates());
-    }
-    else{
+    if (!succes) {
       QMessageBox::critical(this, tr("Error en el formato de archivo"),
                             tr("Ha ocurrido un error al tratar de leer"
                                "el archivo \n %1 \n\n"
@@ -65,6 +60,16 @@ void MainWindow::newProblemInput()
   }
 }
 
+void MainWindow::solveProblem()
+{
+  bool succes = parentApplication->solveProblem();
+  if (!succes) {
+    QMessageBox::critical(this, tr("Error"),
+                          tr("Ha ocurrido un error al tratar de solucionar"
+                                  "el problema cargado"), QMessageBox::Ok);
+  }
+}
+
 void MainWindow::setUpScene(const int & regionSize,
                             const QList<int> & townsNumbers,
                             const QList<QPointF> & townsCoordinates)
@@ -74,6 +79,8 @@ void MainWindow::setUpScene(const int & regionSize,
   paintGraphLabels(regionSize);
   paintSchool(QPointF(4.0,4.0));
 }
+
+
 
 void MainWindow::paintRegion(const int & regionSize)
 {
@@ -244,9 +251,19 @@ void MainWindow::paintGraphLabels(const int & regionSize)
   delete pixmap;
 }
 
+void MainWindow::updateActions()
+{
+  
+}
 
+void MainWindow::updateModelTab(const QString & text)
+{
+  ui->modelTextEdit->setPlainText(text);
+}
 
-
-
+void MainWindow::updateInputFileTab(const QString & text)
+{
+  ui->inputFileTextEdit->setPlainText(text);
+}
 
 

@@ -27,6 +27,9 @@
 #include <QtCore/QList>
 #include <QtCore/QPointF>
 
+// Lp_solve
+#include <lpsolve/lp_lib.h>
+
 // Project
 #include <gui/MainWindow.h>
 #include <parser/FileParser.h>
@@ -51,10 +54,17 @@ class ApplicationController : public QApplication
     ParametersSet * getParametersSet();
    
     bool loadNewProblem(const QString & filePath);
+    bool solveProblem();
     
   private:
     MainWindow * mainWindow;
     ParametersSet * parametersSet;
+    Problem * originProblem;
+    Problem * solution;
+    BranchAndBound * branchAndBound;
+    
+    QString getTextFromFile(const QString & fileName);
+
     
 };
 

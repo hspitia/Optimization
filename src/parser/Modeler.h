@@ -12,7 +12,7 @@ class Modeler
 {
   public:
     Modeler(const ParametersSet & parametersSetObject);
-    void generateModel(bool withBin);
+    void generateModel(bool withBin = false);
 //    QString writeModel(QString fileName);
     bool writeModel(QString fileName);
 

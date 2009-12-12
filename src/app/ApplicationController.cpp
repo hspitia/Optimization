@@ -26,8 +26,10 @@ ApplicationController::ApplicationController(int & argc, char ** argv):
   QApplication(argc, argv), 
   mainWindow(new MainWindow(this))
 {
-  parametersSet = 0;
-
+  parametersSet  = 0;
+  originProblem  = 0;
+  branchAndBound = 0;
+  solution       = 0;
 }
 
 ApplicationController::~ApplicationController()
@@ -35,11 +37,27 @@ ApplicationController::~ApplicationController()
   if (parametersSet != 0)
     delete parametersSet;
   
-  parametersSet = 0;
+  parametersSet  = 0;
+  
+  if (originProblem != 0)
+    delete originProblem;
+  
+  originProblem  = 0;
+  
+  if (branchAndBound != 0)
+    delete branchAndBound;
+  
+  branchAndBound = 0;
+  
+  if (solution != 0)
+    delete solution;
+  
+  solution       = 0;
 }
 
 bool ApplicationController::loadNewProblem(const QString & filePath)
 {
+  QString modelFileName = "tmp/model.lp" ;
   FileParser * fileParser = new FileParser();
   bool succes = fileParser->parseFile(filePath);
   
@@ -49,8 +67,9 @@ bool ApplicationController::loadNewProblem(const QString & filePath)
   parametersSet = new ParametersSet(*(fileParser->getParametersSet()));
   
   Modeler * modeler = new Modeler(*parametersSet);
-  modeler->generateModel(true);
-  succes = modeler->writeModel("tmp/model.lp");
+//  modeler->generateModel(true);
+  modeler->generateModel();
+  succes = modeler->writeModel(modelFileName);
   
   delete fileParser;
   delete modeler;
@@ -59,34 +78,46 @@ bool ApplicationController::loadNewProblem(const QString & filePath)
     return false;
   
   lprec * model;
-  model = read_LP("tmp/model.lp", NORMAL, "Modelo Inicial");
+  model = read_LP(modelFileName.toAscii().data(), NORMAL, "Modelo Inicial");
   if (model) {
     cout << "Modelo leído correctamente." << endl;
-    Problem * originProblem = new Problem(model, "Problema original");
+    originProblem = new Problem(model, "Problema original");
+    
     double bound = parametersSet->getRegionSize() * 2 * 100;
-    BranchAndBound * branchAndBound = new BranchAndBound(originProblem, bound);
+    branchAndBound = new BranchAndBound(originProblem, bound);
+    
     print_lp(originProblem->getModel());
-    cout << "Branching variables: " << endl 
+    cout << "\nBranching variables: " << endl 
          << qPrintable(branchAndBound->indexesBranchingVarsToString()) << endl;
+    
+    
+    mainWindow->setUpScene(parametersSet->getRegionSize(),
+                           parametersSet->getTownsNumbers(),
+                           parametersSet->getTownsCoordinates());
+    mainWindow->updateModelTab(getTextFromFile(modelFileName));
+    mainWindow->updateInputFileTab(getTextFromFile(filePath));
   }
   else
     return false;
-  
-  
-  /* ************** DATA VERIFICATION ***************** */
-  /*
-  cout << "DEBUG - BEGIN - ApplicationController::52 - Data Verification" << endl;
-  cout << "regionSize: " << parametersSet->getRegionSize() << endl;
-  cout << "nSchools:   " << parametersSet->getNSchools() << endl;
-  for (int i = 0; i < parametersSet->getNSchools(); ++i) {
-    cout << parametersSet->getSchoolsNumbers().at(i) << " " 
-         << parametersSet->getSchoolCoordinates().at(i).x() << " " 
-         << parametersSet->getSchoolCoordinates().at(i).x() << endl; 
-  }
-  cout << "DEBUG - END - ApplicationController:60 - Data Verification" << endl;
-  */
-  /* ************************************************** */
+    
   return true; 
+}
+
+bool ApplicationController::solveProblem()
+{
+  solution = branchAndBound->solveBb(BranchAndBound::BINARY_BRANCHING);
+  if (solution) {
+    // TODO - enviar resultados a mainWindow
+    lprec * model = solution->getModel();
+    print_lp(model);
+    print_constraints(model, 1);
+    print_objective(model);
+    print_solution(model, 1);
+  }
+  else
+    return false;
+    
+  return true;  
 }
 
 MainWindow * ApplicationController::getMainWindow()
@@ -97,4 +128,20 @@ MainWindow * ApplicationController::getMainWindow()
 ParametersSet * ApplicationController::getParametersSet()
 {
   return parametersSet;
+}
+
+QString ApplicationController::getTextFromFile(const QString & fileName)
+{
+  QFile file(fileName);
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    return QString();
+  
+  QTextStream textStream(&file);
+  QString text;
+  
+  while (!textStream.atEnd()) {
+    text += textStream.readLine() + "\n";
+  }
+  
+  return text;
 }

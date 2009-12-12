@@ -29,6 +29,11 @@ class MainWindow : public QMainWindow
                QWidget * parent = 0);
     ~MainWindow();
 
+    void setUpScene(const int & regionSize,
+                    const QList<int> & townsNumbers,
+                    const QList<QPointF> & townsCoordinates);
+    void updateModelTab(const QString & text);
+    void updateInputFileTab(const QString & text);
     
   private:
     // Atributos
@@ -40,17 +45,16 @@ class MainWindow : public QMainWindow
 
     void connectSignalsSlots();
     void initComponents();
-    void setUpScene(const int & regionSize,
-                    const QList<int> & townsNumbers,
-                    const QList<QPointF> & townsCoordinates);
     void paintRegion(const int & regionSize);
     void paintTowns(const QList<int> & townsNumbers,
                     const QList<QPointF> & townsCoordinates);
     void paintSchool(const QPointF & schoolCoordinate);
     void paintGraphLabels(const int & regionSize);
+    void updateActions();
   
   private slots:
     void newProblemInput();
+    void solveProblem();
     
 };
 
