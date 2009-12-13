@@ -28,8 +28,8 @@ void MainWindow::connectSignalsSlots()
           SLOT(newProblemInput()));
   connect(ui->solveAction, SIGNAL(triggered()), this,
           SLOT(solveProblem()));
-  
-  
+  connect(ui->exitAction, SIGNAL(triggered()), parentApplication,
+            SLOT(closeAllWindows()));
 }
 
 void MainWindow::initComponents()
@@ -265,5 +265,4 @@ void MainWindow::updateInputFileTab(const QString & text)
 {
   ui->inputFileTextEdit->setPlainText(text);
 }
-
 

@@ -55,7 +55,6 @@ class MainWindow : public QMainWindow
   private slots:
     void newProblemInput();
     void solveProblem();
-    
 };
 
 #endif // MAINWINDOW_H
