@@ -34,6 +34,8 @@ Problem::Problem(lprec * model, const QString & id)
   this->model    = model;
   this->id       = id;
   this->finished = false;
+  // MODO SILENCIOSO
+  set_verbose(model,0);
 }
 
 Problem::Problem(const Problem & problemObject)
@@ -41,6 +43,8 @@ Problem::Problem(const Problem & problemObject)
   this->model    = copy_lp(problemObject.model);
   this->id       = problemObject.id;
   this->finished = problemObject.finished;
+  // MODO SILENCIOSO
+  set_verbose(model,0);
 }
 
 Problem & Problem::operator=(const Problem & problemObject)
@@ -48,7 +52,7 @@ Problem & Problem::operator=(const Problem & problemObject)
   this->model    = copy_lp(problemObject.model);
   this->id       = problemObject.id;
   this->finished = problemObject.finished;
-  
+  set_verbose(model,0);
   return *this;
 }
 

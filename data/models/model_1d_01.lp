@@ -40,7 +40,7 @@ Dy1 - 0 + ey - 82 Ny1 <= 0;
 Dx1 + Dy1 = D1;
 
 
-// Calculo de los condicionales de la vereda más lejana
+// Calculo de los condicionales de la vereda mï¿½s lejana
 D0 - D1 - 82 r0 >= -82;
 D1 - D0 - 82 r1 >= -82;
 
@@ -54,3 +54,4 @@ A0 - 82 r0 <= 0;
 A1 - D1 - 82 r1 >= -82;
 A1 - D1 + 82 r1 <= 82;
 A1 - 82 r1 <= 0;
+

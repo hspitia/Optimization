@@ -64,7 +64,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.environment</key>
-					<value>QMAKESPEC=win32-g++|PATH=/opt/qtsdk-2009.03/qt/bin:${env_var:PATH}:C:\\tempo\\Qt\\2009.03\\qt\\bin;${env_var:PATH};/opt/qtsdk-2009.03/qt/bin:${env_var:PATH}:E:\\programming\\Qt\\2009.03\\qt\\bin|LC_ALL=C|</value>
+					<value>QMAKESPEC=win32-g++|PATH=/usr/bin:${env_var:PATH}:${env_var:PATH}:/opt/qtsdk-2009.03/qt/bin:C:\\tempo\\Qt\\2009.03\\qt\\bin;${env_var:PATH};/opt/qtsdk-2009.03/qt/bin:E:\\programming\\Qt\\2009.03\\qt\\bin|LC_ALL=C|</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.stopOnError</key>

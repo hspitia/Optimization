@@ -80,16 +80,10 @@ bool ApplicationController::loadNewProblem(const QString & filePath)
   lprec * model;
   model = read_LP(modelFileName.toAscii().data(), NORMAL, "Modelo Inicial");
   if (model) {
-    cout << "Modelo leído correctamente." << endl;
     originProblem = new Problem(model, "Problema original");
     
     double bound = parametersSet->getRegionSize() * 2 * 100;
     branchAndBound = new BranchAndBound(originProblem, bound);
-    
-    print_lp(originProblem->getModel());
-    cout << "\nBranching variables: " << endl 
-         << qPrintable(branchAndBound->indexesBranchingVarsToString()) << endl;
-    
     
     mainWindow->setUpScene(parametersSet->getRegionSize(),
                            parametersSet->getTownsNumbers(),
@@ -109,10 +103,7 @@ bool ApplicationController::solveProblem()
   if (solution) {
     // TODO - enviar resultados a mainWindow
     lprec * model = solution->getModel();
-    print_lp(model);
-    print_constraints(model, 1);
-    print_objective(model);
-    print_solution(model, 1);
+
   }
   else
     return false;

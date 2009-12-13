@@ -50,8 +50,8 @@ namespace utils
     return decimal;
   }
   
-  inline bool isInteger(long double number){
-    long double decimal =  decimalPart(number);
+  inline bool isInteger(double number){
+    /*long double decimal =  decimalPart(number);
     if (decimal != 0.0) {
       long double diference = 1 - decimal;
       long double tolerance = 0.000000001;
@@ -62,7 +62,16 @@ namespace utils
       return false;
     }
     
-    return true;
+    return true;*/
+
+    double difference = abs(number - round(number));
+    double tolerance = 0.000000001;
+
+    if(difference < tolerance) {
+      return true;
+    }
+
+    return false;
   }
 }
 #endif /* UTILS_H_ */

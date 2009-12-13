@@ -1,17 +1,17 @@
- #include <QtTest/QtTest>
+#include <QtTest/QtTest>
 
- class BranchAndBoundTest: public QObject
- {
-     Q_OBJECT
- private slots:
-     void toUpper();
- };
+class BranchAndBoundTest : public QObject
+{
+Q_OBJECT private slots:
+void toUpper();
+};
 
- void BranchAndBoundTest::toUpper()
- {
-     QString str = "Hello";
-     QCOMPARE(str.toUpper(), QString("HELLO"));
- }
+void
+BranchAndBoundTest::toUpper()
+{
+  QString str = "Hello";
+  QCOMPARE(str.toUpper(), QString("HELLO"));
+}
 
- QTEST_MAIN(BranchAndBoundTest)
- #include "BranchAndBoundTest.moc"
+QTEST_MAIN( BranchAndBoundTest)
+#include "BranchAndBoundTest.moc"

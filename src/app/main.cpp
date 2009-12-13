@@ -41,35 +41,15 @@ void lpsolveDemo()
   lprec *lp;
   lp = make_lp(0,4);
   
-  
-  cout << "\nAdición restricción 1"<< endl;
   str_add_constraint(lp, "3 2 2 1", LE, 4);
-  print_lp(lp);
   
-  cout << "\nAdición restricción 2"<< endl;
   str_add_constraint(lp, "0 4 3 1", GE, 3);
-  print_lp(lp);
   
-  cout << "\nAdición función objetivo"<< endl;
   str_set_obj_fn(lp, "2 3 -2 3");
-  print_lp(lp);
   
-  cout << "\nResolviendo... "<< endl;
   solve(lp);
   
-  cout << "\n** ESTADO FINAL ** "<< endl;
-  cout << "Función objetivo: "<< endl;
-  print_objective(lp);
-  cout << "\nSolución: "<< endl;
-  print_solution(lp, 1);
-  cout << "\nRestricciones: "<< endl;
-  print_constraints(lp, 1);
-  
-
   delete_lp(lp);
-  
-  
-  cout << "\nTerminado exitosamente!! "<< endl;
 }
 
 int defaultApp(int argc, char *argv[])
@@ -86,8 +66,6 @@ void testBranchAndBound()
   model = read_LP("data/models/example_int_02.lp", NORMAL, "Modelo Inicial");
   if (model) {
     cout.precision(22);
-    cout << "Modelo leído correctamente." << endl;
-    print_lp(model);
   }
   
   Problem * problem = new Problem(model, "Problema original");
@@ -100,10 +78,6 @@ void testBranchAndBound()
   
   Problem * bestSolution = bbObject->solveBb();
   lprec * solution = bestSolution->getModel();
-  print_lp(solution);
-  print_constraints(solution, 1);
-  print_objective(solution);
-  print_solution(solution, 1);
 }
 
 void testBinaryBranchAndBound()
@@ -112,22 +86,17 @@ void testBinaryBranchAndBound()
   model = read_LP("data/models/model_1d_01.lp", NORMAL, "Modelo Inicial");
   if (model) {
     cout.precision(22);
-    cout << "Modelo leído correctamente." << endl;
-    print_lp(model);
   }
   
+
   Problem * problem = new Problem(model, "Problema original");
   
   BranchAndBound * bbObject = new BranchAndBound(problem, 10000);
-  
+
   Problem * bestSolution = bbObject->solveBb(BranchAndBound::BINARY_BRANCHING);
-  
+
   if (bestSolution != 0) {
     lprec * solution = bestSolution->getModel();
-    print_lp(solution);
-    print_constraints(solution, 1);
-    print_objective(solution);
-    print_solution(solution, 1);
   }
   else {
     cout << "\n\nOoooooppppssss!. Error"<< endl;
@@ -138,9 +107,9 @@ int main(int argc, char *argv[])
 {
   
 //  qDebug() << "Hola, esto es una prueba.\n";
-//  defaultApp(argc, argv);
+  defaultApp(argc, argv);
 //  testBranchAndBound();
-  testBinaryBranchAndBound();
+//  testBinaryBranchAndBound();
 //  Q_UNUSED(argc);
 //  Q_UNUSED(argv);
 //  lpsolveDemo();
