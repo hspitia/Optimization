@@ -103,7 +103,7 @@ bool ApplicationController::solveProblem()
   if (solution) {
     // TODO - enviar resultados a mainWindow
     lprec * model = solution->getModel();
-
+    mainWindow->paintSchool(QPointF(solution->getVariable(parametersSet->getNTowns()+1),solution->getVariable(parametersSet->getNTowns()+4)));
   }
   else
     return false;

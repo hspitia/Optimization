@@ -103,7 +103,6 @@ BranchAndBound::solveBbMax(BranchingType branchingType)
     Problem * currentProblem = problemsToSolve.pop();
     lprec * model = currentProblem->getModel();
     int result = solve(model);
-    print_solution(model, 1);
     TRACE (__LINE__ << "\n\t" << "SOL: " << currentProblem->getObjective());
     bool isFeasible = result == 0 || result == 1;
     bool isBelowBound = currentProblem->isBelowBound(bound);
@@ -154,7 +153,6 @@ BranchAndBound::solveBbMin(BranchingType branchingType)
     Problem * currentProblem = problemsToSolve.pop();
     lprec * model = currentProblem->getModel();
     int result = solve(model);
-    print_solution(model, 1);
     TRACE (__LINE__ << "\n\t" << "SOLUCION: " << currentProblem->getObjective());
 
     //    assert(i!=3);

@@ -34,6 +34,7 @@ class MainWindow : public QMainWindow
                     const QList<QPointF> & townsCoordinates);
     void updateModelTab(const QString & text);
     void updateInputFileTab(const QString & text);
+    void paintSchool(const QPointF & schoolCoordinate);
     
   private:
     // Atributos
@@ -48,7 +49,6 @@ class MainWindow : public QMainWindow
     void paintRegion(const int & regionSize);
     void paintTowns(const QList<int> & townsNumbers,
                     const QList<QPointF> & townsCoordinates);
-    void paintSchool(const QPointF & schoolCoordinate);
     void paintGraphLabels(const int & regionSize);
     void updateActions();
   

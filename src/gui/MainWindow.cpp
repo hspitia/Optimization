@@ -56,7 +56,7 @@ void MainWindow::newProblemInput()
     }
   }
   else {
-    cout << "MainWindow::56 - vacío" << endl;
+    cout << "MainWindow::56 - vacï¿½o" << endl;
   }
 }
 
@@ -77,7 +77,7 @@ void MainWindow::setUpScene(const int & regionSize,
   paintRegion(regionSize);
   paintTowns(townsNumbers, townsCoordinates);
   paintGraphLabels(regionSize);
-  paintSchool(QPointF(4.0,4.0));
+//  paintSchool(QPointF(4.0,4.0));
 }
 
 
@@ -205,7 +205,7 @@ void MainWindow::paintSchool(const QPointF & schoolCoordinate)
   xCoordinate -= 13;
 //  yCoordinate += 2;
   currentPoint = QPointF(xCoordinate, yCoordinate);
-  painter->drawText(currentPoint, QString("¡Eureka!"));
+  painter->drawText(currentPoint, QString("Eureka"));
 //  }
   
   ui->imageLabel->setPixmap(*pixmap);
