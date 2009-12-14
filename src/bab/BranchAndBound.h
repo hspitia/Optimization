@@ -72,6 +72,8 @@ class BranchAndBound
     QString indexesBranchingVarsToString() const;
     int getIterationsCounter();
     int getNodesCounter();
+    long long getRelaxedIterations();
+    long long getTotalIterations();
     
   private:
     Problem * originProblem;
@@ -80,6 +82,7 @@ class BranchAndBound
     double bound;
     QList<int> indexesBranchingVars;
     int iterationsCounter;
+    long long relaxedIterations;
     int nodesCounter;
     
     void initIndexesBranchingVars();

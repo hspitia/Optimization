@@ -52,16 +52,16 @@ void MainWindow::newProblemInput()
     }
     else {
       QMessageBox::critical(this, tr("Error en el formato de archivo"),
-                            tr("Ha ocurrido un error al tratar de leer"
+                            tr("Ha ocurrido un error al tratar de leer "
                                "el archivo \n %1 \n\n"
                                "Por favor verifique que el formato sea "
-                               "correcto").arg(fileName),
+                               "correcto.").arg(fileName),
                                QMessageBox::Ok);
     }
   }
-  else {
-    cout << "MainWindow::56 - vac�o" << endl;
-  }
+//  else {
+//    cout << "MainWindow::56 - vac�o" << endl;
+//  }
 }
 
 void MainWindow::solveProblem()

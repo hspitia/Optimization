@@ -39,6 +39,7 @@ BranchAndBound::BranchAndBound()
   this->bound = 0;
   this->indexesBranchingVars = QList<int> ();
   this->iterationsCounter = 0;
+  this->relaxedIterations = 0;
   this->nodesCounter = 0;
 }
 
@@ -49,6 +50,7 @@ BranchAndBound::BranchAndBound(Problem * originProblem, double bound)
   this->problemsToSolve = QStack<Problem *> ();
   this->bound = bound;
   this->iterationsCounter = 0;
+  this->relaxedIterations = 0;
   this->nodesCounter = 0;
   initIndexesBranchingVars();
 }
@@ -100,6 +102,7 @@ Problem * BranchAndBound::solveBbMax(BranchingType branchingType)
     Problem * currentProblem = problemsToSolve.pop();
     lprec * model = currentProblem->getModel();
     int result = solve(model);
+    
     TRACE (__LINE__ << "\n\t" << "SOL: " << currentProblem->getObjective());
     bool isFeasible = result == 0 || result == 1;
     bool isBelowBound = currentProblem->isBelowBound(bound);
@@ -112,6 +115,9 @@ Problem * BranchAndBound::solveBbMax(BranchingType branchingType)
     
     DEBUG ( boolalpha << " Pila vac�a:  "<<problemsToSolve.isEmpty());
     if (!isFeasible || isBelowBound || isIntSolution) {
+      if (iterationsCounter = 0)
+        relaxedIterations = get_total_iter(model);
+        
       currentProblem->setFinished(true);
       TRACE (__LINE__ << "\n\t" << "Dentro del primer condicional. Problema finalizado");
       if (isIntSolution && currentProblem->isOverBound(bound)) {
@@ -150,48 +156,33 @@ Problem * BranchAndBound::solveBbMin(BranchingType branchingType)
     Problem * currentProblem = problemsToSolve.pop();
     lprec * model = currentProblem->getModel();
     int result = solve(model);
-    TRACE (__LINE__ << "\n\t" << "SOLUCION: " << currentProblem->getObjective());
-    
+    if (iterationsCounter == 0) {
+        relaxedIterations = get_total_iter(model);
+      }
     //    assert(i!=3);
 
     bool isFeasible = result == 0;
     bool isOverBound = currentProblem->isOverBound(bound);
     //    bool isIntSolution = currentProblem->isIntegerSolution();
     bool isIntSolution = isIntegerSolution(*currentProblem);
-    TRACE (__LINE__ << "\n\t" << boolalpha
-            << " \n\tisFeasible: " << isFeasible
-            << " \n\tisBelowBound: " << isOverBound
-            << " \n\tisIntegerSolution: " << isIntSolution);
     
-    DEBUG ( boolalpha << " Pila vac�a:  "<<problemsToSolve.isEmpty());
     if (!isFeasible || isOverBound || isIntSolution) {
       currentProblem->setFinished(true);
-      TRACE (__LINE__ << "\n\t" << "Dentro del primer condicional. Problema finalizado");
       if (isFeasible && isIntSolution && currentProblem->isBelowBound(bound)) {
         bound = currentProblem->getObjective();
         bestSolution = currentProblem;
-        TRACE (__LINE__ << "\n\t" << "\t\tSolucion entera. Variables enteras.");
-        DEBUG ( "bound: " << bound << endl);
       }
     }
     else {
-      QString bType = "BINARY";
-      if (branchingType == INTEGER_BRANCHING)
-        bType = "INTEGER";
-      
-      TRACE (__LINE__ << "\n\t" << "Else -> Ramificar\n\tTipo ramificaci�n: "
-              << qPrintable(bType));
-      
       QList<Problem *> children = branch(*currentProblem, branchingType);
       foreach (Problem * p, children) {
         problemsToSolve.push(p);
         ++nodesCounter;
-        TRACE (__LINE__ << "\n\t" << "nodos: " << nodesCounter);
       }
     }
 //    ++i;
     ++iterationsCounter;
-    TRACE (__LINE__ << "\n\t" << "Iteraciones: " << iterationsCounter);
+//    cout << "\n\t" << "Iteraciones: " << iterationsCounter << endl;
   }
   
   return bestSolution;
@@ -417,11 +408,24 @@ void BranchAndBound::setIndexesBranchingVars(QList<int> indexesBranchingVars)
 
 int BranchAndBound::getIterationsCounter()
 {
-  return iterationsCounter;
+  return iterationsCounter - 1;
+}
+
+long long BranchAndBound::getTotalIterations()
+{
+//  cout << "relaxedIterations: " << relaxedIterations<< endl; ;
+//  cout << "iterationsCounter: " << iterationsCounter<< endl;
+  return (relaxedIterations + (long long)iterationsCounter);
 }
 
 int BranchAndBound::getNodesCounter()
 {
   return nodesCounter;
 }
+
+long long BranchAndBound::getRelaxedIterations()
+{
+  return relaxedIterations;
+}
+
 

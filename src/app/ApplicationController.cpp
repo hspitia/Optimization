@@ -59,8 +59,10 @@ bool ApplicationController::loadNewProblem(const QString & filePath)
   FileParser * fileParser = new FileParser();
   bool succes = fileParser->parseFile(filePath);
   
-  if (!succes)
+  if (!succes){
+    cout << "Error de lectura de archivo." << endl;
     return false;
+  }
 
   parametersSet = new ParametersSet(*(fileParser->getParametersSet()));
   
@@ -73,8 +75,10 @@ bool ApplicationController::loadNewProblem(const QString & filePath)
   delete fileParser;
   delete modeler;
   
-  if (!succes)
+  if (!succes){
+    cout << "Error de escritura de archivo de modelo lp." << endl;
     return false;
+  }
 
   lprec * model;
   model = read_LP(modelFileName.toAscii().data(), NORMAL, "Modelo Inicial");
@@ -90,8 +94,10 @@ bool ApplicationController::loadNewProblem(const QString & filePath)
     mainWindow->updateModelTab(getTextFromFile(modelFileName));
     mainWindow->updateInputFileTab(getTextFromFile(filePath));
   }
-  else
+  else {
+    cout << "Error de lectura de archivo de modelo lp." << endl;
     return false;
+  }
   
   return true;
 }
@@ -186,11 +192,17 @@ QString ApplicationController::makeResultsText(const int & timeElapsed)
     outText += "\n";
             
     // Total Iteraciones
-    outText += QString("- Total iteraciones: %1\n")
+    outText += QString("- Iteraciones solución relajada: %1\n")
+               .arg(branchAndBound->getRelaxedIterations());
+            
+    outText += QString("- Iteraciones Branch and Bound : %1\n")
                .arg(branchAndBound->getIterationsCounter());
+//               .arg(branchAndBound->getTotalIterations());
+    outText += QString("- Total Iteraciones            : %1\n")
+               .arg(branchAndBound->getTotalIterations());
             
     // Total Nodos
-    outText += QString("- Total nodos      : %1\n")
+    outText += QString("- Total nodos en B&B           : %1\n")
                .arg(branchAndBound->getNodesCounter());
     
     outText += "\n";
@@ -206,7 +218,7 @@ QString ApplicationController::getDistancesResultText()
   QString outText = "- Distancias entre la escuela y cada vereda:\n";
   int size = solution->getNColumns();
   double variables[size];
-  cout<< boolalpha << solution->getVariables(variables, size) << endl;
+  solution->getVariables(variables, size);
   
   QChar prefix;
   for (int i = 0; i < size; ++i) {
@@ -226,7 +238,6 @@ QString ApplicationController::getTimeElapsed(const int & milliseconds)
   QString outText = "";
   double min  = 0;
   double sec  = 0;
-  double ms   = 0;
   
   if (milliseconds >= 1000) {
     sec  = ((double)milliseconds) / 1000.0;
