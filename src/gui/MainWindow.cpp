@@ -6,11 +6,10 @@ MainWindow::MainWindow(ApplicationController * parentApplication,
     ui(new Ui::MainWindowClass())
 {
   this->parentApplication = parentApplication;
-  this->gridSize =  24; // pixels
-  this->margin   =  30; // pixels
-  this->imgSize  = 380; // pixels
-  this->problemLoaded = false; 
-  this->problemSolved = false;
+  this->gridSize  =  24; // pixels
+  this->margin    =  30; // pixels
+  this->imgSize   = 380; // pixels
+  this->modelType = Modeler::NORMAL_MODEL;
 	ui->setupUi(this);
 	connectSignalsSlots();
 	initComponents();
@@ -279,4 +278,9 @@ void MainWindow::updateInputFileTab(const QString & text)
 void MainWindow::updateResultsTab(const QString & text)
 {
   ui->resultsTextEdit->setPlainText(text);
+}
+
+int MainWindow::getModelType()
+{
+  return modelType;
 }

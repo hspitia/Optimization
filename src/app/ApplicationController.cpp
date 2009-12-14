@@ -66,7 +66,8 @@ bool ApplicationController::loadNewProblem(const QString & filePath)
   
   Modeler * modeler = new Modeler(*parametersSet);
 //    modeler->generateModel(true);
-  modeler->generateModel();
+  int modelType = mainWindow->getModelType();
+  modeler->generateModel(modelType);
   succes = modeler->writeModel(modelFileName);
   
   delete fileParser;
@@ -97,7 +98,11 @@ bool ApplicationController::loadNewProblem(const QString & filePath)
 
 bool ApplicationController::solveProblem()
 {
+  QTime timer;
+  timer.restart();
   solution = branchAndBound->solveBb(BranchAndBound::BINARY_BRANCHING);
+  int timeElapsed = timer.elapsed();
+  
   
 //  Problem * bestSolution = branchAndBound->solveBb(BranchAndBound::BINARY_BRANCHING);
 //  solution = bestSolution;
@@ -105,11 +110,10 @@ bool ApplicationController::solveProblem()
   
 //  delete branchAndBound;
   
-  solve(solution->getModel());
+//  solve(solution->getModel());
   
   if (solution) {
-    // TODO - enviar resultados a mainWindow
-    mainWindow->updateResultsTab(makeResultsText());
+    mainWindow->updateResultsTab(makeResultsText(timeElapsed));
     mainWindow->paintSchool(getSchoolPosition());
   }
   else
@@ -150,23 +154,25 @@ QPointF ApplicationController::getSchoolPosition()
   QPointF schoolPosition;
   
   if (solution) {
-    int nTowns = parametersSet->getNTowns();
-    double xSchoolCoordinate = solution->getVariable(nTowns + 1);
-    double ySchoolCoordinate = solution->getVariable(nTowns + 4);
+//    int nTowns = parametersSet->getNTowns();
+//    double xSchoolCoordinate = solution->getVariable(nTowns + 1);
+    double xSchoolCoordinate = solution->getVariable(2);
+//    double ySchoolCoordinate = solution->getVariable(nTowns + 4);
+    double ySchoolCoordinate = solution->getVariable(5);
     schoolPosition = QPointF(xSchoolCoordinate, ySchoolCoordinate);
   }
   
   return schoolPosition;
 }
 
-QString ApplicationController::makeResultsText()
+QString ApplicationController::makeResultsText(const int & timeElapsed)
 {
   QString outText = "";
   QPointF schoolPosition = getSchoolPosition();
   
   if (solution) {
     // Posición de la escuela 
-    outText += "SOLUCIÓN ENCONTRADA\n";
+    outText += "SOLUCIÓN ENCONTRADA\n\n";
     outText += QString("- Ubicación de la escuela:      (%1, %2)\n")
                .arg(schoolPosition.x())
                .arg(schoolPosition.y());
@@ -174,6 +180,8 @@ QString ApplicationController::makeResultsText()
     // Valor de la función objetivo
     outText += QString("- Valor de la función objetivo: %1\n")
                .arg(solution->getObjective());
+    
+    outText += getDistancesResultText();
     
     outText += "\n";
             
@@ -187,7 +195,7 @@ QString ApplicationController::makeResultsText()
     
     outText += "\n";
     
-    outText += getDistancesResultText();
+    outText += "- Tiempo de solución: " + getTimeElapsed(timeElapsed);
   }
   
   return outText;
@@ -200,20 +208,40 @@ QString ApplicationController::getDistancesResultText()
   double variables[size];
   cout<< boolalpha << solution->getVariables(variables, size) << endl;
   
-  int dist = parametersSet->getNTowns() + 6;
-  int index = dist;
-  
-  for (int i = 0; i < parametersSet->getNTowns(); ++i) {
-    index = dist + (5 * i);
-    outText += QString("    %1: %2\n")
-               .arg(solution->getColumnName(index))
-               .arg(variables[index]);
+  QChar prefix;
+  for (int i = 0; i < size; ++i) {
+    prefix = solution->getColumnPrefixName(i);
+    if (prefix == 'D') {
+      outText += QString("    %1: %2\n")
+                       .arg(solution->getColumnName(i))
+                       .arg(variables[i]);
+    }
   }
   
   return outText;
 }
 
-
+QString ApplicationController::getTimeElapsed(const int & milliseconds)
+{
+  QString outText = "";
+  double min  = 0;
+  double sec  = 0;
+  double ms   = 0;
+  
+  if (milliseconds >= 1000) {
+    sec  = ((double)milliseconds) / 1000.0;
+    if(sec >= 60.0){
+      min = sec / 60.0;
+      sec = min / 60.0;
+      outText += QString("%1 min, ").arg((int)floor(min));
+    }
+    outText += QString("%1 seg\n").arg(sec);
+  }
+  else 
+    outText += QString("%1 ms\n").arg(milliseconds);
+  
+  return outText;
+}
 
 
 

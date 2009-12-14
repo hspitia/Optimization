@@ -36,6 +36,7 @@ class MainWindow : public QMainWindow
     void updateInputFileTab(const QString & text);
     void updateResultsTab(const QString & text);
     void paintSchool(const QPointF & schoolCoordinate);
+    int getModelType();
     
   private:
     // Atributos
@@ -44,9 +45,8 @@ class MainWindow : public QMainWindow
     int gridSize;
     int margin;
     int imgSize;
-    bool problemLoaded;
-    bool problemSolved;
-
+    int modelType;
+    
     void connectSignalsSlots();
     void initComponents();
     void paintRegion(const int & regionSize);

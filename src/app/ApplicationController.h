@@ -38,6 +38,8 @@
 #include <bab/BranchAndBound.h>
 #include <utils/Problem.h>
 
+#include <cmath>
+
 
 // Cyclic reference 
 class MainWindow;
@@ -65,8 +67,9 @@ class ApplicationController : public QApplication
     
     QString getTextFromFile(const QString & fileName);
     QPointF getSchoolPosition();
-    QString makeResultsText();
+    QString makeResultsText(const int & timeElapsed);
     QString getDistancesResultText();
+    QString getTimeElapsed(const int & milliseconds);
     
 };
 

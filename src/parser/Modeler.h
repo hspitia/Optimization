@@ -11,8 +11,12 @@
 class Modeler
 {
   public:
+    enum ModelType{
+      NORMAL_MODEL, ALTERNATIVE_MODEL 
+    };
+    
     Modeler(const ParametersSet & parametersSetObject);
-    void generateModel(bool withBin = false);
+    void generateModel(const int & modelType = NORMAL_MODEL, bool withBin = false);
 //    QString writeModel(QString fileName);
     bool writeModel(QString fileName);
 
@@ -31,10 +35,14 @@ class Modeler
     // Methods
     void initialize();
     QString printPoints();
-    void model2D(bool withBin);
+//    void model2D(bool withBin);
+    void model2D(const int & modelType, bool withBin);
     void calculateConditions();
     void calculateDistances(bool withBin);
     QString qpointToString(const QPointF & p);
+    
+    void calculateConditionsAlternative();
+    void calculateDistancesAlternative(bool withBin);
     
 };
 

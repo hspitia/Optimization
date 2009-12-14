@@ -71,8 +71,8 @@ void BranchAndBound::initIndexesBranchingVars()
   for (int i = 0; i < originProblem->getNColumns(); ++i) {
     QChar prefix = originProblem->getColumnPrefixName(i);
     
-    bool isIntegerPrefix = prefix == 'N' || prefix == 'n' || prefix == 'R'
-            || prefix == 'r';
+    bool isIntegerPrefix = prefix == 'N' || prefix == 'n' || 
+                           prefix == 'R' || prefix == 'r';
     
     if (isIntegerPrefix)
       indexesBranchingVars.append(i);
