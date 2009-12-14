@@ -56,8 +56,8 @@ class Problem
     virtual ~Problem();
     
     // Methods
-//    bool getVariables(double * variables, int & size);
-    bool getVariables(double variables[], int & size);
+    bool getVariables(double * variables, int & size);
+//    bool getVariables(double variables[], int & size);
     int getNColumns() const;
     bool addConstraint(double * row, int constrType, double rhValue);
     bool addConstraintex(int count, double * row, int * colno,

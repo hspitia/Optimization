@@ -64,7 +64,9 @@ class ApplicationController : public QApplication
     BranchAndBound * branchAndBound;
     
     QString getTextFromFile(const QString & fileName);
-
+    QPointF getSchoolPosition();
+    QString makeResultsText();
+    QString getDistancesResultText();
     
 };
 

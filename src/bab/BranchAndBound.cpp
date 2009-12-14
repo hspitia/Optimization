@@ -58,47 +58,44 @@ BranchAndBound::~BranchAndBound()
   if (originProblem)
     delete originProblem;
   originProblem = 0;
-
+  
   if (bestSolution)
     delete bestSolution;
   bestSolution = 0;
 }
 
-void
-BranchAndBound::initIndexesBranchingVars()
+void BranchAndBound::initIndexesBranchingVars()
 {
   indexesBranchingVars = QList<int> ();
-
+  
   for (int i = 0; i < originProblem->getNColumns(); ++i) {
     QChar prefix = originProblem->getColumnPrefixName(i);
-
+    
     bool isIntegerPrefix = prefix == 'N' || prefix == 'n' || prefix == 'R'
-        || prefix == 'r';
-
+            || prefix == 'r';
+    
     if (isIntegerPrefix)
       indexesBranchingVars.append(i);
-
+    
   }
 }
 
-Problem *
-BranchAndBound::solveBb(BranchingType branchingType)
+Problem * BranchAndBound::solveBb(BranchingType branchingType)
 {
   if (originProblem->isMaximization())
     return solveBbMax(branchingType);
-
+  
   return solveBbMin(branchingType);
 }
 
-Problem *
-BranchAndBound::solveBbMax(BranchingType branchingType)
+Problem * BranchAndBound::solveBbMax(BranchingType branchingType)
 {
   problemsToSolve.push(originProblem);
   //  int limit = 7;
   //  int i = 0;
   iterationsCounter = 0;
   nodesCounter = 0;
-
+  
   while (!problemsToSolve.isEmpty()) {//  && i < limit) {
     Problem * currentProblem = problemsToSolve.pop();
     lprec * model = currentProblem->getModel();
@@ -109,10 +106,10 @@ BranchAndBound::solveBbMax(BranchingType branchingType)
     bool isIntSolution = currentProblem->isIntegerSolution();
     //    bool isIntSolution = isIntegerSolution(*currentProblem);
     TRACE (__LINE__ << "\n\t" << boolalpha
-        << " isFeasible: " << isFeasible
-        << " isBelowBound: " << isBelowBound
-        << " isIntegerSolution: " << isIntSolution);
-
+            << " isFeasible: " << isFeasible
+            << " isBelowBound: " << isBelowBound
+            << " isIntegerSolution: " << isIntSolution);
+    
     DEBUG ( boolalpha << " Pila vac�a:  "<<problemsToSolve.isEmpty());
     if (!isFeasible || isBelowBound || isIntSolution) {
       currentProblem->setFinished(true);
@@ -127,34 +124,34 @@ BranchAndBound::solveBbMax(BranchingType branchingType)
     else {
       TRACE (__LINE__ << "\n\t" << "Else -> Ramificar");
       QList<Problem *> children = branch(*currentProblem, branchingType);
-foreach    (Problem * p, children) {
-      problemsToSolve.push(p);
-      ++nodesCounter;
-      TRACE (__LINE__ << "\n\t" << "nodos: " << nodesCounter);
+      foreach (Problem * p, children)
+        {
+          problemsToSolve.push(p);
+          ++nodesCounter;
+          TRACE (__LINE__ << "\n\t" << "nodos: " << nodesCounter);
+        }
     }
+    //    ++i;
+    ++iterationsCounter;
+    TRACE (__LINE__ << "\n\t" << "Iteraciones: " << iterationsCounter);
   }
-  //    ++i;
-  ++iterationsCounter;
-  TRACE (__LINE__ << "\n\t" << "Iteraciones: " << iterationsCounter);
-}
-return bestSolution;
+  return bestSolution;
 }
 
-Problem *
-BranchAndBound::solveBbMin(BranchingType branchingType)
+Problem * BranchAndBound::solveBbMin(BranchingType branchingType)
 {
   problemsToSolve.push(originProblem);
   int limit = 1;
-  int i = 0;
+//  int i = 0;
   iterationsCounter = 0;
   nodesCounter = 0;
-
+  
   while (!problemsToSolve.isEmpty() /*&& i < limit*/) {
     Problem * currentProblem = problemsToSolve.pop();
     lprec * model = currentProblem->getModel();
     int result = solve(model);
     TRACE (__LINE__ << "\n\t" << "SOLUCION: " << currentProblem->getObjective());
-
+    
     //    assert(i!=3);
 
     bool isFeasible = result == 0;
@@ -162,10 +159,10 @@ BranchAndBound::solveBbMin(BranchingType branchingType)
     //    bool isIntSolution = currentProblem->isIntegerSolution();
     bool isIntSolution = isIntegerSolution(*currentProblem);
     TRACE (__LINE__ << "\n\t" << boolalpha
-        << " \n\tisFeasible: " << isFeasible
-        << " \n\tisBelowBound: " << isOverBound
-        << " \n\tisIntegerSolution: " << isIntSolution);
-
+            << " \n\tisFeasible: " << isFeasible
+            << " \n\tisBelowBound: " << isOverBound
+            << " \n\tisIntegerSolution: " << isIntSolution);
+    
     DEBUG ( boolalpha << " Pila vac�a:  "<<problemsToSolve.isEmpty());
     if (!isFeasible || isOverBound || isIntSolution) {
       currentProblem->setFinished(true);
@@ -181,52 +178,50 @@ BranchAndBound::solveBbMin(BranchingType branchingType)
       QString bType = "BINARY";
       if (branchingType == INTEGER_BRANCHING)
         bType = "INTEGER";
-
+      
       TRACE (__LINE__ << "\n\t" << "Else -> Ramificar\n\tTipo ramificaci�n: "
-          << qPrintable(bType));
-
+              << qPrintable(bType));
+      
       QList<Problem *> children = branch(*currentProblem, branchingType);
-      foreach (Problem * p, children)
-        {
-          problemsToSolve.push(p);
-          ++nodesCounter;
-          TRACE (__LINE__ << "\n\t" << "nodos: " << nodesCounter);
-        }
+      foreach (Problem * p, children) {
+        problemsToSolve.push(p);
+        ++nodesCounter;
+        TRACE (__LINE__ << "\n\t" << "nodos: " << nodesCounter);
+      }
     }
-    ++i;
+//    ++i;
     ++iterationsCounter;
     TRACE (__LINE__ << "\n\t" << "Iteraciones: " << iterationsCounter);
   }
-
+  
   return bestSolution;
 }
 
-QList<Problem *>
-BranchAndBound::branch(const Problem & problem, BranchingType branchingType)
+QList<Problem *> BranchAndBound::branch(const Problem & problem,
+                                        BranchingType branchingType)
 {
   if (branchingType == INTEGER_BRANCHING)
     return integerBranching(problem);
-
+  
   return binaryBranching(problem);
 }
 
-QList<Problem *>
-BranchAndBound::integerBranching(const Problem & problem)
+QList<Problem *> BranchAndBound::integerBranching(const Problem & problem)
 {
   QList<Problem *> children;
-
+  
   int i = 0;
   bool branched = false;
   TRACE (__LINE__ << "\n\t" << "indexesBranchingVars: ");
   for (int i = 0; i < indexesBranchingVars.count(); ++i)
     DEBUG (indexesBranchingVars.at(i) << " ");
-
+  
   while (i < indexesBranchingVars.count() && !branched) {
     int columIndex = indexesBranchingVars.at(i);
     if (!problem.isIntegerVariable(columIndex)) {
       double lowerBound = floor(problem.getVariable(columIndex));
       double upperBound = ceil(problem.getVariable(columIndex));
-
+      
       //      TRACE (__LINE__ << "\n\t" << "Dentro del ciclo y condicional en branch():");
       //      DEBUG ( "problem->getvariable("<< i << "): " << problem.getVariable(i) 
       //              << " lowerBound: " << lowerBound 
@@ -235,59 +230,58 @@ BranchAndBound::integerBranching(const Problem & problem)
       Problem * newProblem = new Problem(problem);
       addConstraintToProblem(newProblem, columIndex, LE, lowerBound);
       children.append(newProblem);
-
-
+      
       newProblem = new Problem(problem);
       addConstraintToProblem(newProblem, columIndex, GE, upperBound);
       children.append(newProblem);
-
+      
       branched = true;
       newProblem = 0;
     }
     ++i;
   }
-
+  
   return children;
 }
 
-QList<Problem *>
-BranchAndBound::binaryBranching(const Problem & problem)
+QList<Problem *> BranchAndBound::binaryBranching(const Problem & problem)
 {
   QList<Problem *> children;
-
+  
   int i = 0;
   bool branched = false;
-
+  
   TRACE (__LINE__ << "\n\t" << "binaryBranching");
   //  DEBUG ("");
   while (i < indexesBranchingVars.count() && !branched) {
     int columnIndex = indexesBranchingVars.at(i);
-
+    
     if (!problem.isIntegerVariable(columnIndex)) {
       double lowerBound = 0.0;
       double upperBound = 1.0;
       QChar varPrefix = problem.getColumnPrefixName(columnIndex);
-
+      
       // Nuevo nodo / problema
       Problem * newProblem = new Problem(problem);
-
+      
       // Adici�n de la restricci�n con la variable = 0
       cout.precision(20);
       TRACE ("Subproblema: " << qPrintable(problem.getColumnName(columnIndex))
-          << " = " << lowerBound <<
-          ". Este subproblema fue generado ya que la variable "
-          << qPrintable(problem.getColumnName(columnIndex))
-          << " = " << problem.getVariable(columnIndex));
+              << " = " << lowerBound <<
+              ". Este subproblema fue generado ya que la variable "
+              << qPrintable(problem.getColumnName(columnIndex))
+              << " = " << problem.getVariable(columnIndex));
       addConstraintToProblem(newProblem, columnIndex, EQ, lowerBound);
       children.append(newProblem);
-
+      
       // Nuevo nodo / problema
       newProblem = new Problem(problem);
-
+      
       // Creaci�n de nodo con restricci�n de variable = 1
-      TRACE ("Subproblema: " << qPrintable(problem.getColumnName(columnIndex)) << " = " << upperBound);
+      TRACE ("Subproblema: " << qPrintable(problem.getColumnName(columnIndex)) 
+             << " = " << upperBound);
       addConstraintToProblem(newProblem, columnIndex, EQ, upperBound);
-
+      
       // Si es una variable ri (vereda m�s lejana), las dem�s ri son iguales a 0
       if (varPrefix == 'r' || varPrefix == 'R') {
         addMultipleConstraintsToProblem(newProblem, columnIndex, EQ, lowerBound);
@@ -298,149 +292,135 @@ BranchAndBound::binaryBranching(const Problem & problem)
     }
     ++i;
   }
-
+  
   return children;
 }
 
-void
-BranchAndBound::addConstraintToProblem(Problem * problem,
-    const int & columnIndex, const int & constrType, const double & bound)
+void BranchAndBound::addConstraintToProblem(Problem * problem,
+                                            const int & columnIndex,
+                                            const int & constrType,
+                                            const double & bound)
 {
   int colno[1];
   colno[0] = columnIndex + 1;
-
+  
   double sparserow[1];
   sparserow[0] = 1.0;
-
+  
   problem->addConstraintex(1, sparserow, colno, constrType, bound);
-
+  
 }
 
-void
-BranchAndBound::addMultipleConstraintsToProblem(Problem * problem,
-    const int & columnIndex, const int & constrType, const double & bound)
+void BranchAndBound::addMultipleConstraintsToProblem(Problem * problem,
+                                                     const int & columnIndex,
+                                                     const int & constrType,
+                                                     const double & bound)
 {
   for (int i = 0; i < indexesBranchingVars.count(); ++i) {
     int currentIndex = indexesBranchingVars.at(i);
     QChar currentPrefix = problem->getColumnPrefixName(currentIndex);
     bool isIntegerPrefix = currentPrefix == 'r' || currentPrefix == 'R';
-
+    
     if (isIntegerPrefix && currentIndex != columnIndex)
       addConstraintToProblem(problem, currentIndex, EQ, bound);
   }
 }
 
-QString
-BranchAndBound::indexesBranchingVarsToString() const
+QString BranchAndBound::indexesBranchingVarsToString() const
 {
   QString outString = "( ";
-
+  
   foreach (int columnIndex, indexesBranchingVars)
-  outString += originProblem->getColumnName(columnIndex) + " ";
-
+      outString += originProblem->getColumnName(columnIndex) + " ";
+  
   outString += ")";
-
+  
   return outString;
 }
 
-bool
-BranchAndBound::isOverBound(const Problem & problem)
+bool BranchAndBound::isOverBound(const Problem & problem)
 {
   int result = problem.compareObjectiveTo(bound);
   return result == 1;
 }
 
-bool
-BranchAndBound::isBelowBound(const Problem & problem)
+bool BranchAndBound::isBelowBound(const Problem & problem)
 {
   int result = problem.compareObjectiveTo(bound);
   return result == -1;
 }
 
-bool
-BranchAndBound::isIntegerSolution(const Problem & problem)
+bool BranchAndBound::isIntegerSolution(const Problem & problem)
 {
   int i = 0;
   bool isInteger = true;
-
+  
   while (i < indexesBranchingVars.count() && isInteger) {
     int variableIndex = indexesBranchingVars.at(i);
     isInteger = problem.isIntegerVariable(variableIndex);
-//    cout << qPrintable(problem.getColumnName(variableIndex)) << " = " << problem.getVariable(variableIndex) << ", ";
+    //    cout << qPrintable(problem.getColumnName(variableIndex)) << " = " << problem.getVariable(variableIndex) << ", ";
     ++i;
   }
-
+  
   return isInteger;
 }
 
-Problem *
-BranchAndBound::getBestSolution()
+Problem * BranchAndBound::getBestSolution()
 {
   return bestSolution;
 }
 
-void
-BranchAndBound::setBestSolution(Problem * bestSolution)
+void BranchAndBound::setBestSolution(Problem * bestSolution)
 {
   this->bestSolution = bestSolution;
 }
 
-QStack<Problem *>
-BranchAndBound::getProblemsToSolve()
+QStack<Problem *> BranchAndBound::getProblemsToSolve()
 {
   return problemsToSolve;
 }
 
-void
-BranchAndBound::setProblemsToSolve(QStack<Problem *> problemsToSolve)
+void BranchAndBound::setProblemsToSolve(QStack<Problem *> problemsToSolve)
 {
   this->problemsToSolve = problemsToSolve;
 }
 
-Problem *
-BranchAndBound::getOriginProblem()
+Problem * BranchAndBound::getOriginProblem()
 {
   return originProblem;
 }
 
-void
-BranchAndBound::setOriginProblem(Problem * originProblem)
+void BranchAndBound::setOriginProblem(Problem * originProblem)
 {
   this->originProblem = originProblem;
 }
 
-double
-BranchAndBound::getBound()
+double BranchAndBound::getBound()
 {
   return bound;
 }
 
-void
-BranchAndBound::setBound(double bound)
+void BranchAndBound::setBound(double bound)
 {
   this->bound = bound;
 }
 
-QList<int>
-BranchAndBound::getIndexesBranchingVars()
+QList<int> BranchAndBound::getIndexesBranchingVars()
 {
   return indexesBranchingVars;
 }
 
-void
-BranchAndBound::setIndexesBranchingVars(QList<int> indexesBranchingVars)
+void BranchAndBound::setIndexesBranchingVars(QList<int> indexesBranchingVars)
 {
   this->indexesBranchingVars = indexesBranchingVars;
 }
 
-int
-BranchAndBound::getIterationsCounter()
+int BranchAndBound::getIterationsCounter()
 {
   return iterationsCounter;
 }
 
-int
-BranchAndBound::getNodesCounter()
+int BranchAndBound::getNodesCounter()
 {
   return nodesCounter;
 }

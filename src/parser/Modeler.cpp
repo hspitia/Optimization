@@ -31,7 +31,7 @@ QString Modeler::qpointToString(const QPointF & p)
 {
   QString x = QString::number(p.x());
   QString y = QString::number(p.y());
-  return "(" + x + "," + y + ")";
+  return "(" + x + ", " + y + ")";
 }
 
 QString Modeler::printPoints()
@@ -46,50 +46,53 @@ QString Modeler::printPoints()
 
 void Modeler::model2D(bool withBin)
 {
-  if (withBin) {
-    calculateDistances();
+//  if (withBin) {
+    calculateDistances(withBin);
     model += "\n";
     calculateConditions();
     model = obj + "\n" + model + "\n" + ints;
-  }
-  else {
-    calculateDistances();
-    model += "\n";
-    calculateConditions();
-    model = obj + "\n" + model;
-  }
+//  }
+//  else {
+//    calculateDistances();
+//    model += "\n";
+//    calculateConditions();
+//    model = obj + "\n" + model + "\n" + ints;
+//  }
 }
 
-void Modeler::calculateDistances()
+void Modeler::calculateDistances(bool withBin)
 {
   int size = townsCoordinates.size();
   for (int di = 0; di < size; di++) {
-    QString i = QString::number(di);
+    QString i = QString::number(di + 1);
     QString elmX = QString::number(townsCoordinates[di].x());
     QString elmY = QString::number(townsCoordinates[di].y());
     
     model += "// Distancia de la escuela a " + i + "\n";
     model += "\n// Distancia en X\n";
-    model += "Dx" + i + " - ex + " + elmX + " - " + M + " Nx" + i + " >= -" + M
+    model += "dx" + i + " - ex + " + elmX + " - " + M + " Nx" + i + " >= -" + M
             + ";\n";
-    model += "Dx" + i + " - ex + " + elmX + " + " + M + " Nx" + i + " <= " + M
+    model += "dx" + i + " - ex + " + elmX + " + " + M + " Nx" + i + " <= " + M
             + ";\n";
-    model += "Dx" + i + " - " + elmX + " + ex + " + M + " Nx" + i + " >= 0;\n";
-    model += "Dx" + i + " - " + elmX + " + ex - " + M + " Nx" + i + " <= 0;\n";
+    model += "dx" + i + " - " + elmX + " + ex + " + M + " Nx" + i + " >= 0;\n";
+    model += "dx" + i + " - " + elmX + " + ex - " + M + " Nx" + i + " <= 0;\n";
     model += "\n// Distancia en Y\n";
-    model += "Dy" + i + " - ey + " + elmY + " - " + M + " Ny" + i + " >= -" + M
+    model += "dy" + i + " - ey + " + elmY + " - " + M + " Ny" + i + " >= -" + M
             + ";\n";
-    model += "Dy" + i + " - ey + " + elmY + " + " + M + " Ny" + i + " <= " + M
+    model += "dy" + i + " - ey + " + elmY + " + " + M + " Ny" + i + " <= " + M
             + ";\n";
-    model += "Dy" + i + " - " + elmY + " + ey + " + M + " Ny" + i + " >= 0;\n";
-    model += "Dy" + i + " - " + elmY + " + ey - " + M + " Ny" + i + " <= 0;\n";
+    model += "dy" + i + " - " + elmY + " + ey + " + M + " Ny" + i + " >= 0;\n";
+    model += "dy" + i + " - " + elmY + " + ey - " + M + " Ny" + i + " <= 0;\n";
     model += "\n// Distancia Total\n";
-    model += "Dx" + i + " + Dy" + i + " = D" + i + ";\n\n";
+    model += "dx" + i + " + dy" + i + " = D" + i + ";\n\n";
     
     //bin+="Nx"+i+" <= 1;\n";
     //bin+="Ny"+i+" <= 1;\n";
     if (di == 0) {
-      ints += "bin Nx0, Ny0";
+      if (!withBin)
+        ints += "// ";
+      
+      ints += "bin Nx1, Ny1";
     }
     else {
       ints += ", Nx" + i + ", Ny" + i;
@@ -105,9 +108,9 @@ void Modeler::calculateConditions()
   int size = townsCoordinates.size();
   
   for (int di = 0; di < size; di++) {
-    QString i = QString::number(di);
+    QString i = QString::number(di + 1);
     for (int dj = 0; dj < size; dj++) {
-      QString j = QString::number(dj);
+      QString j = QString::number(dj + 1);
       if (di != dj) {
         model += "D" + i + " - D" + j + " - " + M + " r" + i + " >= -" + M
                 + ";\n";
@@ -130,7 +133,7 @@ void Modeler::calculateConditions()
   
   model += "// Actualizar en algun A, la distancia mas lejana\n";
   for (int di = 0; di < size; di++) {
-    QString i = QString::number(di);
+    QString i = QString::number(di + 1);
     model += "A" + i + " - D" + i + " - " + M + " r" + i + " >= -" + M + ";\n";
     model += "A" + i + " - D" + i + " + " + M + " r" + i + " <= " + M + ";\n";
     model += "A" + i + " - " + M + " r" + i + " <= 0;\n";
@@ -145,6 +148,7 @@ void Modeler::calculateConditions()
   
   obj += ";\n";
 }
+
 /*
 QString Modeler::writeModel(QString fileName)
 {

@@ -69,15 +69,25 @@ void testBranchAndBound()
   }
   
   Problem * problem = new Problem(model, "Problema original");
+  print_lp(problem->getModel());
   
-  BranchAndBound * bbObject = new BranchAndBound(problem, -10000);
+  Problem * copy = new Problem(*problem); 
+  print_lp(copy->getModel());
   
-  QList<int> varsBranching;
-//  varsBranching << 0 << 1;
-//  bbObject->setIndexesBranchingVars(varsBranching);
+  cout << "problem: " << problem << endl;
+  cout << "copy   : " << copy<< endl;
+
+  cout << "problem model: " << problem->getModel() << endl;
+  cout << "copy model   : " << copy->getModel() << endl;
   
-  Problem * bestSolution = bbObject->solveBb();
-  lprec * solution = bestSolution->getModel();
+//  BranchAndBound * bbObject = new BranchAndBound(problem, -10000);
+//  
+//  QList<int> varsBranching;
+////  varsBranching << 0 << 1;
+////  bbObject->setIndexesBranchingVars(varsBranching);
+//  
+//  Problem * bestSolution = bbObject->solveBb();
+//  lprec * solution = bestSolution->getModel();
 }
 
 void testBinaryBranchAndBound()

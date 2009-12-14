@@ -33,7 +33,7 @@ class Modeler
     QString printPoints();
     void model2D(bool withBin);
     void calculateConditions();
-    void calculateDistances();
+    void calculateDistances(bool withBin);
     QString qpointToString(const QPointF & p);
     
 };

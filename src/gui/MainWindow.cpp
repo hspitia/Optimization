@@ -9,9 +9,12 @@ MainWindow::MainWindow(ApplicationController * parentApplication,
   this->gridSize =  24; // pixels
   this->margin   =  30; // pixels
   this->imgSize  = 380; // pixels
+  this->problemLoaded = false; 
+  this->problemSolved = false;
 	ui->setupUi(this);
 	connectSignalsSlots();
 	initComponents();
+	updateActions(false);
 }
 
 MainWindow::~MainWindow()
@@ -26,9 +29,8 @@ void MainWindow::connectSignalsSlots()
 {
   connect(ui->newProblemInputAction, SIGNAL(triggered()), this,
           SLOT(newProblemInput()));
-  connect(ui->solveAction, SIGNAL(triggered()), this,
-          SLOT(solveProblem()));
-  
+  connect(ui->solveAction, SIGNAL(triggered()), this, SLOT(solveProblem()));
+  connect(ui->exitAction, SIGNAL(triggered()), this, SLOT(close()));
   
 }
 
@@ -46,7 +48,10 @@ void MainWindow::newProblemInput()
                                                   tr("Texto (*.txt)"));
   if (!fileName.isEmpty()) {
     bool succes = parentApplication->loadNewProblem(fileName);
-    if (!succes) {
+    if (succes) {
+      updateActions(true);
+    }
+    else {
       QMessageBox::critical(this, tr("Error en el formato de archivo"),
                             tr("Ha ocurrido un error al tratar de leer"
                                "el archivo \n %1 \n\n"
@@ -63,7 +68,10 @@ void MainWindow::newProblemInput()
 void MainWindow::solveProblem()
 {
   bool succes = parentApplication->solveProblem();
-  if (!succes) {
+  if (succes) {
+    updateActions(false);
+  }
+  else {
     QMessageBox::critical(this, tr("Error"),
                           tr("Ha ocurrido un error al tratar de solucionar"
                                   "el problema cargado"), QMessageBox::Ok);
@@ -146,7 +154,8 @@ void MainWindow::paintTowns(const QList<int> & townsNumbers,
           
   double yCoordinate = 0.0;
   double xCoordinate = 0.0;
-  QPixmap town(":/icons/city_24");
+  QPixmap town(":/icons/village_24");
+//  QPixmap town(":/icons/city_24");
 //  QPixmap town(":/icons/city_32");
 //  QPixmap town(":/icons/school_24");
   int halfIconSize = town.width() / 2;
@@ -236,6 +245,7 @@ void MainWindow::paintGraphLabels(const int & regionSize)
   for (int i = 1; i < nLines; ++i) {
     if (i >= 10) 
        displacement = 3.0;
+    
     xCoordinate = (gridSize * i) + (margin / 1.1) - displacement;
     yCoordinate = imgSize - (margin / 2);
     painter->drawText(QPointF(xCoordinate, yCoordinate), QString().setNum(i));
@@ -251,9 +261,9 @@ void MainWindow::paintGraphLabels(const int & regionSize)
   delete pixmap;
 }
 
-void MainWindow::updateActions()
+void MainWindow::updateActions(bool flag)
 {
-  
+  ui->solveAction->setEnabled(flag);
 }
 
 void MainWindow::updateModelTab(const QString & text)
@@ -266,4 +276,7 @@ void MainWindow::updateInputFileTab(const QString & text)
   ui->inputFileTextEdit->setPlainText(text);
 }
 
-
+void MainWindow::updateResultsTab(const QString & text)
+{
+  ui->resultsTextEdit->setPlainText(text);
+}

@@ -21,15 +21,13 @@
 
 #include "ApplicationController.h"
 
-
-ApplicationController::ApplicationController(int & argc, char ** argv):
-  QApplication(argc, argv), 
-  mainWindow(new MainWindow(this))
+ApplicationController::ApplicationController(int & argc, char ** argv) :
+  QApplication(argc, argv), mainWindow(new MainWindow(this))
 {
-  parametersSet  = 0;
-  originProblem  = 0;
+  parametersSet = 0;
+  originProblem = 0;
   branchAndBound = 0;
-  solution       = 0;
+  solution = 0;
 }
 
 ApplicationController::~ApplicationController()
@@ -37,12 +35,12 @@ ApplicationController::~ApplicationController()
   if (parametersSet != 0)
     delete parametersSet;
   
-  parametersSet  = 0;
+  parametersSet = 0;
   
   if (originProblem != 0)
     delete originProblem;
   
-  originProblem  = 0;
+  originProblem = 0;
   
   if (branchAndBound != 0)
     delete branchAndBound;
@@ -52,31 +50,31 @@ ApplicationController::~ApplicationController()
   if (solution != 0)
     delete solution;
   
-  solution       = 0;
+  solution = 0;
 }
 
 bool ApplicationController::loadNewProblem(const QString & filePath)
 {
-  QString modelFileName = "tmp/model.lp" ;
+  QString modelFileName = "tmp/model.lp";
   FileParser * fileParser = new FileParser();
   bool succes = fileParser->parseFile(filePath);
   
   if (!succes)
     return false;
-  
+
   parametersSet = new ParametersSet(*(fileParser->getParametersSet()));
   
   Modeler * modeler = new Modeler(*parametersSet);
-//  modeler->generateModel(true);
+//    modeler->generateModel(true);
   modeler->generateModel();
   succes = modeler->writeModel(modelFileName);
   
   delete fileParser;
   delete modeler;
   
-  if(!succes)
+  if (!succes)
     return false;
-  
+
   lprec * model;
   model = read_LP(modelFileName.toAscii().data(), NORMAL, "Modelo Inicial");
   if (model) {
@@ -93,22 +91,32 @@ bool ApplicationController::loadNewProblem(const QString & filePath)
   }
   else
     return false;
-    
-  return true; 
+  
+  return true;
 }
 
 bool ApplicationController::solveProblem()
 {
   solution = branchAndBound->solveBb(BranchAndBound::BINARY_BRANCHING);
+  
+//  Problem * bestSolution = branchAndBound->solveBb(BranchAndBound::BINARY_BRANCHING);
+//  solution = bestSolution;
+//  solution = new Problem (*bestSolution);
+  
+//  delete branchAndBound;
+  
+  solve(solution->getModel());
+  
   if (solution) {
     // TODO - enviar resultados a mainWindow
-    lprec * model = solution->getModel();
-    mainWindow->paintSchool(QPointF(solution->getVariable(parametersSet->getNTowns()+1),solution->getVariable(parametersSet->getNTowns()+4)));
+    mainWindow->updateResultsTab(makeResultsText());
+    mainWindow->paintSchool(getSchoolPosition());
   }
   else
     return false;
-    
-  return true;  
+  
+  
+  return true;
 }
 
 MainWindow * ApplicationController::getMainWindow()
@@ -126,7 +134,7 @@ QString ApplicationController::getTextFromFile(const QString & fileName)
   QFile file(fileName);
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     return QString();
-  
+
   QTextStream textStream(&file);
   QString text;
   
@@ -136,3 +144,97 @@ QString ApplicationController::getTextFromFile(const QString & fileName)
   
   return text;
 }
+
+QPointF ApplicationController::getSchoolPosition()
+{
+  QPointF schoolPosition;
+  
+  if (solution) {
+    int nTowns = parametersSet->getNTowns();
+    double xSchoolCoordinate = solution->getVariable(nTowns + 1);
+    double ySchoolCoordinate = solution->getVariable(nTowns + 4);
+    schoolPosition = QPointF(xSchoolCoordinate, ySchoolCoordinate);
+  }
+  
+  return schoolPosition;
+}
+
+QString ApplicationController::makeResultsText()
+{
+  QString outText = "";
+  QPointF schoolPosition = getSchoolPosition();
+  
+  if (solution) {
+    // Posición de la escuela 
+    outText += "SOLUCIÓN ENCONTRADA\n";
+    outText += QString("- Ubicación de la escuela:      (%1, %2)\n")
+               .arg(schoolPosition.x())
+               .arg(schoolPosition.y());
+               
+    // Valor de la función objetivo
+    outText += QString("- Valor de la función objetivo: %1\n")
+               .arg(solution->getObjective());
+    
+    outText += "\n";
+            
+    // Total Iteraciones
+    outText += QString("- Total iteraciones: %1\n")
+               .arg(branchAndBound->getIterationsCounter());
+            
+    // Total Nodos
+    outText += QString("- Total nodos      : %1\n")
+               .arg(branchAndBound->getNodesCounter());
+    
+    outText += "\n";
+    
+    outText += getDistancesResultText();
+  }
+  
+  return outText;
+}
+
+QString ApplicationController::getDistancesResultText()
+{
+  QString outText = "- Distancias entre la escuela y cada vereda:\n";
+  int size = solution->getNColumns();
+  double variables[size];
+  cout<< boolalpha << solution->getVariables(variables, size) << endl;
+  
+  int dist = parametersSet->getNTowns() + 6;
+  int index = dist;
+  
+  for (int i = 0; i < parametersSet->getNTowns(); ++i) {
+    index = dist + (5 * i);
+    outText += QString("    %1: %2\n")
+               .arg(solution->getColumnName(index))
+               .arg(variables[index]);
+  }
+  
+  return outText;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

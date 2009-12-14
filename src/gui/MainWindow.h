@@ -34,6 +34,7 @@ class MainWindow : public QMainWindow
                     const QList<QPointF> & townsCoordinates);
     void updateModelTab(const QString & text);
     void updateInputFileTab(const QString & text);
+    void updateResultsTab(const QString & text);
     void paintSchool(const QPointF & schoolCoordinate);
     
   private:
@@ -43,6 +44,8 @@ class MainWindow : public QMainWindow
     int gridSize;
     int margin;
     int imgSize;
+    bool problemLoaded;
+    bool problemSolved;
 
     void connectSignalsSlots();
     void initComponents();
@@ -50,7 +53,7 @@ class MainWindow : public QMainWindow
     void paintTowns(const QList<int> & townsNumbers,
                     const QList<QPointF> & townsCoordinates);
     void paintGraphLabels(const int & regionSize);
-    void updateActions();
+    void updateActions(bool flag);
   
   private slots:
     void newProblemInput();

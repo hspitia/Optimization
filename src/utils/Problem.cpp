@@ -62,10 +62,13 @@ Problem::~Problem()
     delete_lp(model);
 }
 
-bool Problem::getVariables(double variables[], int & size)
+//bool Problem::getVariables(double variables[], int & size)
+bool Problem::getVariables(double * variables, int & size)
 {
 //  get_variables(lprec *lp, REAL * variables);
-  size = get_Ncolumns(model);
+//  size = get_Ncolumns(model);
+//  double vars[size];
+//  variables = vars;
   return get_variables(model, variables);
 }
 
