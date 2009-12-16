@@ -9,8 +9,8 @@ MainWindow::MainWindow(ApplicationController * parentApplication,
   this->gridSize  =  24; // pixels
   this->margin    =  30; // pixels
   this->imgSize   = 380; // pixels
-//  this->modelType = Modeler::NORMAL_MODEL;
-  this->modelType = Modeler::ALTERNATIVE_MODEL;
+  this->modelType = Modeler::NORMAL_MODEL;
+//  this->modelType = Modeler::ALTERNATIVE_MODEL;
 	ui->setupUi(this);
 	connectSignalsSlots();
 	initComponents();
