@@ -62,13 +62,11 @@ class ApplicationController : public QApplication
     MainWindow * mainWindow;
     ParametersSet * parametersSet;
     Problem * originProblem;
-    Problem * solution;
+    SolutionSet solution;
     BranchAndBound * branchAndBound;
     
     QString getTextFromFile(const QString & fileName);
-    QPointF getSchoolPosition();
     QString makeResultsText(const int & timeElapsed);
-    QString getDistancesResultText();
     QString getTimeElapsed(const int & milliseconds);
     
 };

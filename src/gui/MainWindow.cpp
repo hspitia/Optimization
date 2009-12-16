@@ -9,7 +9,8 @@ MainWindow::MainWindow(ApplicationController * parentApplication,
   this->gridSize  =  24; // pixels
   this->margin    =  30; // pixels
   this->imgSize   = 380; // pixels
-  this->modelType = Modeler::NORMAL_MODEL;
+//  this->modelType = Modeler::NORMAL_MODEL;
+  this->modelType = Modeler::ALTERNATIVE_MODEL;
 	ui->setupUi(this);
 	connectSignalsSlots();
 	initComponents();
@@ -37,6 +38,9 @@ void MainWindow::initComponents()
 {
 //  QWidget * centralWidget = ui->centralwidget;
 //  imageViewer = new ImageViewer(new QImage(), ui->centralwidget);
+//  ui->modelTextEdit->setFont(QFont("Bitstream Vera Sans Mono", 9, QFont::Normal));
+//  ui->modelTextEdit->setFont(QFont("Monospace", 9, QFont::Normal));
+  
 }
 
 void MainWindow::newProblemInput()

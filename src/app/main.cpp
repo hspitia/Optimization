@@ -90,28 +90,28 @@ void testBranchAndBound()
 //  lprec * solution = bestSolution->getModel();
 }
 
-void testBinaryBranchAndBound()
-{
-  lprec * model;
-  model = read_LP("data/models/model_1d_01.lp", NORMAL, "Modelo Inicial");
-  if (model) {
-    cout.precision(22);
-  }
-  
-
-  Problem * problem = new Problem(model, "Problema original");
-  
-  BranchAndBound * bbObject = new BranchAndBound(problem, 10000);
-
-  Problem * bestSolution = bbObject->solveBb(BranchAndBound::BINARY_BRANCHING);
-
-  if (bestSolution != 0) {
-    lprec * solution = bestSolution->getModel();
-  }
-  else {
-    cout << "\n\nOoooooppppssss!. Error"<< endl;
-  }
-}
+//void testBinaryBranchAndBound()
+//{
+//  lprec * model;
+//  model = read_LP("data/models/model_1d_01.lp", NORMAL, "Modelo Inicial");
+//  if (model) {
+//    cout.precision(22);
+//  }
+//  
+//
+//  Problem * problem = new Problem(model, "Problema original");
+//  
+//  BranchAndBound * bbObject = new BranchAndBound(problem, 10000);
+//
+//  Problem * bestSolution = bbObject->solveBb(BranchAndBound::BINARY_BRANCHING);
+//
+//  if (bestSolution != 0) {
+//    lprec * solution = bestSolution->getModel();
+//  }
+//  else {
+//    cout << "\n\nOoooooppppssss!. Error"<< endl;
+//  }
+//}
 
 int main(int argc, char *argv[])
 {

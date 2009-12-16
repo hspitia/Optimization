@@ -29,6 +29,7 @@
 #include <utils/tree.h>
 #include <utils/Problem.h>
 #include <utils/Utils.h>
+#include <utils/SolutionSet.h>
 
 // Std
 #include <iostream>
@@ -62,9 +63,12 @@ class BranchAndBound
     void setProblemsToSolve(QStack<Problem *> problemsToSolve);
     Problem * getOriginProblem();
     void setOriginProblem(Problem * originProblem);
-    Problem * solveBb(BranchingType branchingType = INTEGER_BRANCHING);
-    Problem * solveBbMax(BranchingType branchingType);
-    Problem * solveBbMin(BranchingType branchingType);
+//    Problem * solveBb(BranchingType branchingType = INTEGER_BRANCHING);
+    SolutionSet solveBb(BranchingType branchingType = INTEGER_BRANCHING);
+//    Problem * solveBbMax(BranchingType branchingType);
+    SolutionSet solveBbMax(BranchingType branchingType);
+//    Problem * solveBbMin(BranchingType branchingType);
+    SolutionSet solveBbMin(BranchingType branchingType);
     double getBound();
     void setBound(double bound);
     QList<int> getIndexesBranchingVars();
@@ -74,10 +78,13 @@ class BranchAndBound
     int getNodesCounter();
     long long getRelaxedIterations();
     long long getTotalIterations();
+    SolutionSet getSolutionFromProblem(const Problem & problem);
+    
     
   private:
     Problem * originProblem;
     Problem * bestSolution;
+    SolutionSet solution;
     QStack<Problem *> problemsToSolve;
     double bound;
     QList<int> indexesBranchingVars;

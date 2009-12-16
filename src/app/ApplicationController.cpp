@@ -27,7 +27,8 @@ ApplicationController::ApplicationController(int & argc, char ** argv) :
   parametersSet = 0;
   originProblem = 0;
   branchAndBound = 0;
-  solution = 0;
+//  solution = 0;
+  solution = SolutionSet();
 }
 
 ApplicationController::~ApplicationController()
@@ -46,11 +47,11 @@ ApplicationController::~ApplicationController()
     delete branchAndBound;
   
   branchAndBound = 0;
-  
-  if (solution != 0)
-    delete solution;
-  
-  solution = 0;
+//  
+//  if (solution != 0)
+//    delete solution;
+//  
+//  solution = 0;
 }
 
 bool ApplicationController::loadNewProblem(const QString & filePath)
@@ -109,18 +110,10 @@ bool ApplicationController::solveProblem()
   solution = branchAndBound->solveBb(BranchAndBound::BINARY_BRANCHING);
   int timeElapsed = timer.elapsed();
   
-  
-//  Problem * bestSolution = branchAndBound->solveBb(BranchAndBound::BINARY_BRANCHING);
-//  solution = bestSolution;
-//  solution = new Problem (*bestSolution);
-  
-//  delete branchAndBound;
-  
-//  solve(solution->getModel());
-  
-  if (solution) {
+//  if (solution) {
+  if (!solution.isEmpty()) {
     mainWindow->updateResultsTab(makeResultsText(timeElapsed));
-    mainWindow->paintSchool(getSchoolPosition());
+    mainWindow->paintSchool(solution.getSchoolPosition());
   }
   else
     return false;
@@ -155,49 +148,27 @@ QString ApplicationController::getTextFromFile(const QString & fileName)
   return text;
 }
 
-QPointF ApplicationController::getSchoolPosition()
-{
-  QPointF schoolPosition;
-  
-  if (solution) {
-//    int nTowns = parametersSet->getNTowns();
-//    double xSchoolCoordinate = solution->getVariable(nTowns + 1);
-    double xSchoolCoordinate = solution->getVariable(2);
-//    double ySchoolCoordinate = solution->getVariable(nTowns + 4);
-    double ySchoolCoordinate = solution->getVariable(5);
-    schoolPosition = QPointF(xSchoolCoordinate, ySchoolCoordinate);
-  }
-  
-  return schoolPosition;
-}
-
 QString ApplicationController::makeResultsText(const int & timeElapsed)
 {
   QString outText = "";
-  QPointF schoolPosition = getSchoolPosition();
+//  QPointF schoolPosition = getSchoolPosition();
+//  QPointF schoolPosition = solution->getSchoolPosition();
+  QPointF schoolPosition = solution.getSchoolPosition();
   
-  if (solution) {
-    // Posición de la escuela 
+//  if (solution) {
+  if (!solution.isEmpty()) {
     outText += "SOLUCIÓN ENCONTRADA\n\n";
-    outText += QString("- Ubicación de la escuela:      (%1, %2)\n")
-               .arg(schoolPosition.x())
-               .arg(schoolPosition.y());
-               
-    // Valor de la función objetivo
-    outText += QString("- Valor de la función objetivo: %1\n")
-               .arg(solution->getObjective());
-    
-    outText += getDistancesResultText();
+
+    outText += solution.toString();
     
     outText += "\n";
-            
-    // Total Iteraciones
+    // Iteraciones
     outText += QString("- Iteraciones solución relajada: %1\n")
                .arg(branchAndBound->getRelaxedIterations());
             
     outText += QString("- Iteraciones Branch and Bound : %1\n")
                .arg(branchAndBound->getIterationsCounter());
-//               .arg(branchAndBound->getTotalIterations());
+    
     outText += QString("- Total Iteraciones            : %1\n")
                .arg(branchAndBound->getTotalIterations());
             
@@ -208,26 +179,6 @@ QString ApplicationController::makeResultsText(const int & timeElapsed)
     outText += "\n";
     
     outText += "- Tiempo de solución: " + getTimeElapsed(timeElapsed);
-  }
-  
-  return outText;
-}
-
-QString ApplicationController::getDistancesResultText()
-{
-  QString outText = "- Distancias entre la escuela y cada vereda:\n";
-  int size = solution->getNColumns();
-  double variables[size];
-  solution->getVariables(variables, size);
-  
-  QChar prefix;
-  for (int i = 0; i < size; ++i) {
-    prefix = solution->getColumnPrefixName(i);
-    if (prefix == 'D') {
-      outText += QString("    %1: %2\n")
-                       .arg(solution->getColumnName(i))
-                       .arg(variables[i]);
-    }
   }
   
   return outText;

@@ -47,8 +47,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>377</width>
-           <height>412</height>
+           <width>379</width>
+           <height>397</height>
           </rect>
          </property>
          <layout class="QGridLayout" name="gridLayout">
@@ -82,7 +82,7 @@
      <x>0</x>
      <y>0</y>
      <width>847</width>
-     <height>19</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArchivo">
@@ -120,7 +120,7 @@
    <property name="minimumSize">
     <size>
      <width>440</width>
-     <height>172</height>
+     <height>174</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -167,7 +167,7 @@
               <x>0</x>
               <y>0</y>
               <width>400</width>
-              <height>381</height>
+              <height>351</height>
              </rect>
             </property>
             <layout class="QGridLayout" name="gridLayout_3">
@@ -176,9 +176,17 @@
              </property>
              <item row="0" column="0">
               <widget class="QTextEdit" name="resultsTextEdit">
+               <property name="font">
+                <font>
+                 <family>Bitstream Vera Sans Mono</family>
+                 <pointsize>10</pointsize>
+                 <weight>50</weight>
+                 <italic>false</italic>
+                 <bold>false</bold>
+                </font>
+               </property>
                <property name="styleSheet">
-                <string>/*padding: 4px;*/
-font: 8pt &quot;Bitstream Vera Sans Mono&quot;;</string>
+                <string/>
                </property>
                <property name="readOnly">
                 <bool>true</bool>
@@ -209,8 +217,8 @@ font: 8pt &quot;Bitstream Vera Sans Mono&quot;;</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>96</width>
-              <height>61</height>
+              <width>400</width>
+              <height>351</height>
              </rect>
             </property>
             <layout class="QGridLayout" name="gridLayout_6">
@@ -219,9 +227,10 @@ font: 8pt &quot;Bitstream Vera Sans Mono&quot;;</string>
              </property>
              <item row="0" column="0">
               <widget class="QTextEdit" name="modelTextEdit">
-               <property name="styleSheet">
-                <string>/*padding: 4px;*/
-font: 8pt &quot;Bitstream Vera Sans Mono&quot;;</string>
+               <property name="font">
+                <font>
+                 <family>Monospace</family>
+                </font>
                </property>
                <property name="readOnly">
                 <bool>true</bool>
@@ -258,8 +267,8 @@ font: 8pt &quot;Bitstream Vera Sans Mono&quot;;</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>96</width>
-              <height>61</height>
+              <width>400</width>
+              <height>351</height>
              </rect>
             </property>
             <layout class="QGridLayout" name="gridLayout_7">
@@ -268,9 +277,10 @@ font: 8pt &quot;Bitstream Vera Sans Mono&quot;;</string>
              </property>
              <item row="0" column="0">
               <widget class="QTextEdit" name="inputFileTextEdit">
-               <property name="styleSheet">
-                <string>/*padding: 4px;*/
-font: 8pt &quot;Bitstream Vera Sans Mono&quot;;</string>
+               <property name="font">
+                <font>
+                 <family>Monospace</family>
+                </font>
                </property>
                <property name="readOnly">
                 <bool>true</bool>

@@ -13,7 +13,8 @@ Modeler::Modeler(const ParametersSet & parametersSetObject)
 void Modeler::initialize()
 {
   obj = "// Funcion Objetivo\n";
-  obj += "min: L";
+//  obj += "min: L";
+  obj += "min: ";
   model = "// Calculo de las Distancias entre la escuela y las veredas\n";
   //bin="// Restricciones Binarias\n";
   ints = "// Restricciones Binarias\n";
@@ -62,6 +63,7 @@ void Modeler::model2D(const int & modelType, bool withBin)
 ////  }
 
   if (modelType == NORMAL_MODEL) {
+    obj += "L ";
     calculateDistances(withBin);
     model += "\n";
     calculateConditions();

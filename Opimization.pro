@@ -2,7 +2,8 @@ TEMPLATE = app
 TARGET = app
 QT += core \
     gui
-HEADERS += src/parser/Modeler.h \
+HEADERS += src/utils/SolutionSet.h \
+    src/parser/Modeler.h \
     src/utils/Utils.h \
     src/utils/Problem.h \
     src/utils/tree.h \
@@ -10,7 +11,8 @@ HEADERS += src/parser/Modeler.h \
     src/app/ApplicationController.h \
     src/parser/FileParser.h \
     src/gui/MainWindow.h
-SOURCES += src/parser/Modeler.cpp \
+SOURCES += src/utils/SolutionSet.cpp \
+    src/parser/Modeler.cpp \
     src/bab/BranchAndBound.cpp \
     src/utils/Problem.cpp \
     src/parser/ParametersSet.cpp \
@@ -23,7 +25,7 @@ DEPENDPATH += . \
     src/
 INCLUDEPATH += . \
     src/
-unix::LIBS += -L/usr/lib/lpsolve \
+unix:LIBS += -L/usr/lib/lpsolve \
     -llpsolve55 \
     -L/usr/lib \
     -lcolamd

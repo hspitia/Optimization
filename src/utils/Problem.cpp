@@ -63,12 +63,14 @@ Problem::~Problem()
 }
 
 //bool Problem::getVariables(double variables[], int & size)
-bool Problem::getVariables(double * variables, int & size)
+//bool Problem::getVariables(double * variables, int & size) const
+bool Problem::getVariables(double * variables) const
 {
-//  get_variables(lprec *lp, REAL * variables);
+////  get_variables(lprec *lp, REAL * variables);
 //  size = get_Ncolumns(model);
 //  double vars[size];
 //  variables = vars;
+//  return get_variables(model, vars);
   return get_variables(model, variables);
 }
 
